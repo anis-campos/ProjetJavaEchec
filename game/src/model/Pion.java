@@ -6,6 +6,8 @@
 package model;
 
 import static java.lang.Math.abs;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -57,6 +59,28 @@ public class Pion extends AbstractPiece implements Pions {
     @Override
     public boolean isMoveDiagOk() {
         return true;
+    }
+
+    @Override
+    public List<Coord> movePath(int xFinal, int yFinal) {
+        List<Coord> ret = new ArrayList<>();
+        
+        if(abs(yFinal - this.coord.y) == 2){
+            //si le pion se déplace de deux cases
+            //on retient d'abord la première case (switch-case)
+            switch(this.couleur){
+                case BLANC:
+                    ret.add(new Coord(xFinal, this.coord.y - 1));
+                    break;
+                case NOIR:
+                    ret.add(new Coord(xFinal, this.coord.y + 1));
+                    break;
+            }
+        }
+        
+        ret.add(new Coord(xFinal, yFinal));
+        
+        return ret;
     }
 
 }

@@ -18,9 +18,18 @@ public class Echiquier {
     private String message;
 
     public Echiquier() {
-        message = "Aucun mouvement n'a encore été fait";
         jeuBlanc = new Jeu(Couleur.BLANC);
         jeuNoir = new Jeu(Couleur.NOIR);
+        jeuCourant = Couleur.values()[(int) Math.round(Math.random())];
+        
+        switch(jeuCourant){
+            case BLANC:
+                message = "L'équipe blanche a gagné le tirage au sort !\n";
+                break;
+            case NOIR:
+                message = "L'équipe noire a gagné le tirage au sort !\n";
+                break;
+        }
     }
     
     public String getMessage() {
@@ -28,7 +37,7 @@ public class Echiquier {
     }
     
     public boolean isEchecEtMat() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
     
     public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
@@ -37,15 +46,22 @@ public class Echiquier {
             case BLANC:
                 if (jeuBlanc.isPieceHere(xInit, yInit) 
                         && !(xInit == xFinal && yInit == yFinal) 
-                        && jeuBlanc.isMoveOk(xInit, yInit, xFinal, yFinal)) {
-                   
+                        && jeuBlanc.isMoveOk(xInit, yInit, xFinal, yFinal)) { 
+                   rep = jeuBlanc.Move(xInit, yInit, xFinal, yFinal);
+                   this.message = "[" + this.jeuCourant.toString() + "] Déplacement de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : OK : déplacement simple\n";
                 }
-                
                 break;
             case NOIR:
-                this.jeuCourant = Couleur.BLANC;
+                if (jeuNoir.isPieceHere(xInit, yInit) 
+                        && !(xInit == xFinal && yInit == yFinal) 
+                        && jeuNoir.isMoveOk(xInit, yInit, xFinal, yFinal)) { 
+                   rep = jeuNoir.Move(xInit, yInit, xFinal, yFinal);
+                   this.message = "[" + this.jeuCourant.toString() + "] Déplacement de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : OK : déplacement simple\n";
+                }
                 break;
         }
+        this.message = "Déplacement de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + " : OK : déplacement simple";
+        
         return rep;
     }
     
@@ -67,7 +83,7 @@ public class Echiquier {
     }
     
     public String toString(){
-        String ret = "", temp;
+        String ret = "Y \\ X", temp;
         
         for(int i = 0 ; i < 8 ; i++)
             ret += "\t  " + i;

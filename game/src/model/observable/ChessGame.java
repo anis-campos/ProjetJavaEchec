@@ -34,7 +34,7 @@ public class ChessGame extends Observable{
 	public String toString() {
 		String st = "";
 		st += "\n" + echiquier.getMessage() + "\n";
-		st = echiquier.toString();	
+		st += echiquier.toString();	
 		return  st;
 	}
 

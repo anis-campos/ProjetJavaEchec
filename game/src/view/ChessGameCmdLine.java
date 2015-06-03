@@ -25,19 +25,27 @@ public class ChessGameCmdLine {
     }
     
     public void demander(){
-        System.out.print("\n\nX Y (pièce à déplacer) : ");
-        Scanner sc = new Scanner(System.in);
-        int x, y;
-        x = sc.nextInt();
-        y = sc.nextInt();
+        boolean ok = false;
         
-        System.out.print("\n\nX Y (case choisie) : ");
-        Scanner sc2 = new Scanner(System.in);
-        int xNew, yNew;
-        xNew = sc2.nextInt();
-        yNew = sc2.nextInt();
-        
-        chessGameControler.move(new Coord(x, y), new Coord(xNew, yNew));
+        while(!ok){
+            System.out.print("\n\n[" + chessGameControler.getColorCurrentPlayer() + "] X Y (pièce à déplacer) : ");
+            Scanner sc = new Scanner(System.in);
+            int x, y;
+            x = sc.nextInt();
+            y = sc.nextInt();
+
+            System.out.print("\n[" + chessGameControler.getColorCurrentPlayer() + "] X Y (case choisie) : ");
+            Scanner sc2 = new Scanner(System.in);
+            int xNew, yNew;
+            xNew = sc2.nextInt();
+            yNew = sc2.nextInt();
+
+            ok = chessGameControler.move(new Coord(x, y), new Coord(xNew, yNew));
+            
+            if(!ok)
+                System.out.println("\nErreur lors du déplacement, veuillez recommencer");
+        }
+                               
     }
     
 }

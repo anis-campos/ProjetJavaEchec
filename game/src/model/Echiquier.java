@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.util.List;
+
 /**
  *
  * @author Antoine
@@ -46,26 +48,55 @@ public class Echiquier {
             case BLANC:
                 if (jeuBlanc.isPieceHere(xInit, yInit) 
                         && !(xInit == xFinal && yInit == yFinal) 
-                        && jeuBlanc.isMoveOk(xInit, yInit, xFinal, yFinal)) { 
-                   rep = jeuBlanc.Move(xInit, yInit, xFinal, yFinal);
-                   this.message = "[" + this.jeuCourant.toString() + "] Déplacement de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : OK : déplacement simple\n";
+                        && jeuBlanc.isMoveOk(xInit, yInit, xFinal, yFinal)) {
+                    if(collisionManager(jeuBlanc.movePath(xInit, yInit, xFinal, yFinal)))
+                        rep = jeuBlanc.Move(xInit, yInit, xFinal, yFinal);
                 }
                 break;
             case NOIR:
                 if (jeuNoir.isPieceHere(xInit, yInit) 
                         && !(xInit == xFinal && yInit == yFinal) 
                         && jeuNoir.isMoveOk(xInit, yInit, xFinal, yFinal)) { 
-                   rep = jeuNoir.Move(xInit, yInit, xFinal, yFinal);
-                   this.message = "[" + this.jeuCourant.toString() + "] Déplacement de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : OK : déplacement simple\n";
+                    
+                    if(collisionManager(jeuNoir.movePath(xInit, yInit, xFinal, yFinal)))
+                        rep = jeuNoir.Move(xInit, yInit, xFinal, yFinal);
                 }
                 break;
         }
-        this.message = "Déplacement de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + " : OK : déplacement simple";
+        this.message = "[" + this.jeuCourant.toString() + "] Déplacement de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : OK : déplacement simple\n";
         
         return rep;
     }
     
-
+    //si renvoie true : OK pour MOVE
+    private boolean collisionManager(List<Coord> listCoordPath){
+        int i = 0; 
+        boolean haveNotAFriendInPath = true;
+        while(i < listCoordPath.size() && haveNotAFriendInPath){
+            if(jeuBlanc.isPieceHere(listCoordPath.get(i).x, listCoordPath.get(i).y) || 
+                    jeuNoir.isPieceHere(listCoordPath.get(i).x, listCoordPath.get(i).y))
+                haveNotAFriendInPath = false;
+            
+            i++;
+        }
+        
+        if(i == listCoordPath.size() && !haveNotAFriendInPath){
+            int dernierX = listCoordPath.get(listCoordPath.size() - 1).x;
+            int dernierY = listCoordPath.get(listCoordPath.size() - 1).y;
+            switch(this.jeuCourant){
+                case BLANC:
+                    if(this.jeuNoir.isPieceHere(dernierX, dernierY))
+                        this.jeuNoir.capture(dernierX, dernierY);
+                    break;
+                case NOIR:
+                    if(this.jeuBlanc.isPieceHere(dernierX, dernierY))
+                        this.jeuBlanc.capture(dernierX, dernierY);
+                    break;
+            }
+        }
+        
+        return haveNotAFriendInPath;
+    }
     
     public void switchJoueur() {
         switch (this.jeuCourant) {
@@ -91,16 +122,8 @@ public class Echiquier {
         for(int y = 0 ; y < 8 ; y++){
             ret += "\n" + y;
             for(int x = 0 ; x < 8 ; x++){
-                temp = jeuBlanc.afficherPiece(x, y);
-                if(temp == ""){
-                    temp = jeuNoir.afficherPiece(x, y);
-                    if(temp == "")
-                        ret += "\t _____";
-                    else
-                        ret += "\t" + temp;
-                }
-                else
-                    ret += "\t" + temp;
+                ret += "\t";
+                ret += jeuBlanc.isCaptured(x, y) ? (jeuNoir.isCaptured(x, y) ? "_____" : jeuNoir.getPieceName(x, y)) : jeuBlanc.getPieceName(x, y);
             }
         }
         

@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.net.CookieHandler;
 import java.util.List;
 import tools.ChessPieceFactory;
 
@@ -67,7 +68,15 @@ public class Jeu {
         return couleur.name();
     }
     
-    public String afficherPiece(int x, int y){
+    public Couleur getPieceCouleur(int x, int y){
+        Pieces piece = findPiece(x, y);
+        if(piece == null)
+            return null;
+        else
+            return piece.getCouleur();
+    }
+    
+    public String getPieceName(int x, int y){
         Pieces piece = findPiece(x, y);
         if(piece == null)
             return "";
@@ -75,20 +84,28 @@ public class Jeu {
             return piece.getName();
     }
     
-    public Couleur getPieceCouleur(int x, int y){
-        return findPiece(x, y).getCouleur();
-    }
-    
-    public String getPieceName(int x, int y){
-        return findPiece(x, y).getName();
-    }
-    
     public String getPieceType(int x, int y){
-        return findPiece(x, y).getClass().getName();
+        Pieces piece = findPiece(x, y);
+        if(piece == null)
+            return "";
+        else
+            return piece.getClass().getSimpleName();
+    }
+    
+    public boolean isCaptured(int x, int y){
+        Pieces piece = findPiece(x, y);
+        if(piece == null)
+            return false;
+        else
+            return piece.getCapture();
     }
     
     public Couleur getCouleur(){
         return this.couleur;
+    }
+    
+    public List<Coord> movePath(int xInit, int yInit, int xFinal, int yFinal){
+        return findPiece(xInit, yInit).movePath(xFinal, yFinal);
     }
     
     private Pieces findPiece(int x, int y){

@@ -65,6 +65,10 @@ public abstract class AbstractPiece implements Pieces {
     public int getY() {
         return this.coord.y;
     }
+    
+    public boolean getCapture(){
+        return this.capture;
+    }
 
     public List<Coord> availableCoords() {
         List<Coord> coords = new LinkedList<>();

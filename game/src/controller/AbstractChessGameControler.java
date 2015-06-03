@@ -4,7 +4,7 @@ package controller;
 
 import model.Coord;
 import model.Couleur;
-import model.ChessGame;
+import model.observable.ChessGame;
 
 
 /**

@@ -6,8 +6,8 @@ import java.util.Observer;
 import javax.swing.JFrame;
 
 import controller.ChessGameControlers;
-import controller.ChessGameControler;
-import model.ChessGame;
+import controller.controllerLocal.ChessGameControler;
+import model.observable.ChessGame;
 import view.ChessGameGUI;
 
 

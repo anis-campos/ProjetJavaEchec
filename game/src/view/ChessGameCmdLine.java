@@ -5,7 +5,7 @@
  */
 package view;
 
-import controller.ChessGameControler;
+import controller.controllerLocal.ChessGameControler;
 
 /**
  *

@@ -11,23 +11,23 @@ package model;
  */
 public class Echiquier {
 
-    String getMessage() {
+    public String getMessage() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    boolean isEchecEtMat() {
+    public boolean isEchecEtMat() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    boolean move(int xInit, int yInit, int xFinal, int yFinal) {
+    public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    void switchJoueur() {
+    public void switchJoueur() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    Couleur getColorCurrentPlayer() {
+    public Couleur getColorCurrentPlayer() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

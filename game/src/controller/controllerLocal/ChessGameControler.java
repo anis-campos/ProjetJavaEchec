@@ -1,8 +1,9 @@
-package controller;
+package controller.controllerLocal;
 
 
 import model.Coord;
-import model.ChessGame;
+import model.observable.ChessGame;
+import controller.AbstractChessGameControler;
 import controller.AbstractChessGameControler;
 
 

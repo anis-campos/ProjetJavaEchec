@@ -1,7 +1,8 @@
-package model;
+package model.observable;
 
 
 import java.util.Observable;
+import model.Couleur;
 
 import model.Echiquier;
 

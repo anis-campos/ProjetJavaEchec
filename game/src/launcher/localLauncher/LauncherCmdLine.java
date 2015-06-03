@@ -1,8 +1,8 @@
 package launcher.localLauncher;
 
-import model.ChessGame;
+import model.observable.ChessGame;
 import view.ChessGameCmdLine;
-import controller.ChessGameControler;
+import controller.controllerLocal.ChessGameControler;
 
 
 /**

@@ -14,12 +14,12 @@ public class LauncherCmdLine {
 	public static void main(String[] args) {		
 		
 		ChessGame chessGame = new ChessGame();
-		ChessGameControler chessGameControler;		
+		ChessGameControler chessGameControler = new ChessGameControler(chessGame);
 		
-		chessGame = new ChessGame();	
-		chessGameControler = new ChessGameControler(chessGame);
-		
-		new ChessGameCmdLine(chessGameControler);	
+		ChessGameCmdLine chessGameCmdLine = new ChessGameCmdLine(chessGameControler);	
+                
+                chessGameCmdLine.afficher();
+                
 	}
 
 }

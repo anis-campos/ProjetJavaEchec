@@ -120,7 +120,4 @@ public abstract class AbstractPiece implements Pieces {
 
     }
 
-    boolean estDansPlateau(int x, int y) {
-        return x >= 0 && y <= 7 && y >= 0 && y <= 7;
-    }
 }

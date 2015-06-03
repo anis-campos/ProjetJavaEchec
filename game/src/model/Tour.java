@@ -21,7 +21,7 @@ public class Tour extends AbstractPiece {
 
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
-        return estDansPlateau(xFinal, yFinal) && ((abs(xFinal - getX()) == 0
+        return Coord.coordonnees_valides(xFinal, yFinal) && ((abs(xFinal - getX()) == 0
                 && abs(getY() - yFinal) > 0)
                 || (abs(xFinal - getX()) > 0
                 && abs(getY() - yFinal) == 0));

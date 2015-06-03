@@ -21,7 +21,7 @@ public class Fou extends AbstractPiece {
 
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
-        return estDansPlateau(xFinal, yFinal) && (abs(xFinal - getX()) == abs(yFinal - getY()));
+        return Coord.coordonnees_valides(xFinal, yFinal) && (abs(xFinal - getX()) == abs(yFinal - getY()));
     }
 
     @Override

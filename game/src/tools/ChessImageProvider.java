@@ -1,6 +1,7 @@
 package tools;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -96,8 +97,7 @@ public class ChessImageProvider {
 		key = pieceType + pieceCouleur.name();
 		value = mapImage.get(key);
 		File g=new File("");
-		ret = g.getAbsolutePath()+"\\images\\" + value;
-		return ret;		
+		return Paths.get(g.getAbsolutePath(),"src","images", value).toString();		
 	}
 
 

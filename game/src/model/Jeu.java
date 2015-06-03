@@ -5,8 +5,8 @@
  */
 package model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import tools.ChessPieceFactory;
 
 /**
  *
@@ -14,62 +14,37 @@ import java.util.Map;
  */
 public class Jeu {
     Couleur couleur;
-    Map<Coord, AbstractPiece> mapPieces;
+    List<Pieces> listPieces;
     
     private static final int NB_PIECES = 16;
     
     public Jeu(Couleur couleur){
         this.couleur = couleur;
-        mapPieces = new HashMap<>(NB_PIECES);
-        
-        switch(this.couleur){
-            case BLANC:
-                initPiecesMapBlanc();
-                break;
-            case NOIR:
-                initPiecesMapNoir();
-                break;
-        }
-    }
-    
-    private void initPiecesMapBlanc(){
-        mapPieces.put(new Coord(0, 0), new Tour("B_To1", this.couleur, new Coord(0, 0)));
-        mapPieces.put(new Coord(1, 0), new Cavalier(("B_Ca1"), this.couleur, new Coord(1, 0)));
-        mapPieces.put(new Coord(2, 0), new Fou(("B_Fo1"), this.couleur, new Coord(2, 0)));
-        mapPieces.put(new Coord(3, 0), new Reine(("B_Re1"), this.couleur, new Coord(3, 0)));
-        mapPieces.put(new Coord(4, 0), new Roi(("B_Ro1"), this.couleur, new Coord(4, 0)));
-        mapPieces.put(new Coord(5, 0), new Fou(("B_Fo2"), this.couleur, new Coord(5, 0)));
-        mapPieces.put(new Coord(6, 0), new Cavalier(("B_Ca2"), this.couleur, new Coord(6, 0)));
-        mapPieces.put(new Coord(7, 0), new Tour(("B_To2"), this.couleur, new Coord(7, 0)));
-        
-        for(int i = 0 ; i < 8 ; i++)
-            mapPieces.put(new Coord(i, 1), new Pion(("B_Pi"+Integer.toString(i+1)), this.couleur, new Coord(i, 1)));
-    }
-    
-    private void initPiecesMapNoir(){
-        mapPieces.put(new Coord(0, 0), new Tour("N_To1", this.couleur, new Coord(0, 0)));
-        mapPieces.put(new Coord(1, 0), new Cavalier(("N_Ca1"), this.couleur, new Coord(1, 0)));
-        mapPieces.put(new Coord(2, 0), new Fou(("N_Fo1"), this.couleur, new Coord(2, 0)));
-        mapPieces.put(new Coord(3, 0), new Reine(("N_Re1"), this.couleur, new Coord(3, 0)));
-        mapPieces.put(new Coord(4, 0), new Roi(("N_Ro1"), this.couleur, new Coord(4, 0)));
-        mapPieces.put(new Coord(5, 0), new Fou(("N_Fo2"), this.couleur, new Coord(5, 0)));
-        mapPieces.put(new Coord(6, 0), new Cavalier(("N_Ca2"), this.couleur, new Coord(6, 0)));
-        mapPieces.put(new Coord(7, 0), new Tour(("N_To2"), this.couleur, new Coord(7, 0)));
-        
-        for(int i = 0 ; i < 8 ; i++)
-            mapPieces.put(new Coord(i, 1), new Pion(("N_Pi"+Integer.toString(i+1)), this.couleur, new Coord(i, 1)));
+        this.listPieces = ChessPieceFactory.newPieces(couleur);
     }
     
     public boolean Move(int xInit, int yInit, int xFinal, int yFinal){
-        return mapPieces.get(new Coord(xInit, yInit)).move(xFinal, yFinal);
+        Pieces piece = findPiece(xInit, yInit);
+        if(piece != null)
+            return piece.move(xFinal, yFinal);
+        else
+            return false;
     }
     
     public boolean isMoveOk(int xInit, int yInit, int xFinal, int yFinal){
-        return mapPieces.get(new Coord(xInit, yInit)).isMoveOk(xFinal, yFinal);
+        Pieces piece = findPiece(xInit, yInit);
+        if(piece != null)
+            return piece.isMoveOk(xFinal, yFinal);
+        else
+            return false;
     }
     
     public boolean capture(int xCatch, int yCatch){
-        return mapPieces.get(new Coord(xCatch, yCatch)).capture();
+        Pieces piece = findPiece(xCatch, yCatch);
+        if(piece != null)
+            return piece.capture();
+        else
+            return false;
     }
     
     public boolean isPieceToMoveHere(int x, int y){
@@ -87,6 +62,7 @@ public class Jeu {
             return true;
     }
     
+    @Override
     public String toString(){
         return couleur.name();
     }
@@ -107,13 +83,26 @@ public class Jeu {
         return this.couleur;
     }
     
-    private AbstractPiece findPiece(int x, int y){
-        return mapPieces.get(new Coord(x, y));
+    private Pieces findPiece(int x, int y){
+        boolean find = false;
+        int i = 0;
+        
+        while(i < listPieces.size() && !find){
+            if(listPieces.get(i).getX() == x && listPieces.get(i).getY() == y)
+                find = true;
+            else
+                i++;
+        }
+        
+        if(i < listPieces.size())
+            return listPieces.get(i);
+        else
+            return null;
     }
     
     public static void main(String args[]){
         Jeu jeuB = new Jeu(Couleur.BLANC);
-        System.out.println(jeuB.findPiece(0, 0));
+        System.out.println(jeuB.findPiece(0, 7));
         
         
         Jeu jeuN = new Jeu(Couleur.NOIR);

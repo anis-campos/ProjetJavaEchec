@@ -22,6 +22,15 @@ public class Jeu {
     public Jeu(Couleur couleur){
         this.couleur = couleur;
         mapPieces = new HashMap<>(NB_PIECES);
+        
+        switch(this.couleur){
+            case BLANC:
+                initPiecesMapBlanc();
+                break;
+            case NOIR:
+                initPiecesMapNoir();
+                break;
+        }
     }
     
     private void initPiecesMapBlanc(){
@@ -81,26 +90,31 @@ public class Jeu {
     }
     
     public Couleur getPieceCouleur(int x, int y){
-        return null;
+        return getPiece(x, y).getCouleur();
     }
     
     public String getPieceName(int x, int y){
-        return null;
+        return getPiece(x, y).getName();
     }
     
     public String getPieceType(int x, int y){
-        return null;
+        return getPiece(x, y).getClass().getName();
     }
     
-    public String getCouleur(){
-        return null;
+    public Couleur getCouleur(){
+        return this.couleur;
     }
     
     private AbstractPiece getPiece(int x, int y){
-        return null;
+        return mapPieces.get(new Coord(x, y));
     }
     
     public static void main(String args[]){
+        Jeu jeuB = new Jeu(Couleur.BLANC);
+        System.out.println(jeuB.getPiece(0, 0));
         
+        
+        Jeu jeuN = new Jeu(Couleur.NOIR);
+        System.out.println(jeuN.getPiece(4, 0));
     }
 }

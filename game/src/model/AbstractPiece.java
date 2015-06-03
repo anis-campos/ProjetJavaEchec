@@ -10,9 +10,9 @@ package model;
  * @author Antoine
  */
 public abstract class AbstractPiece implements Pieces {
-    String name;
-    Couleur couleur;
-    Coord coord;
+    private String name;
+    private Couleur couleur;
+    private Coord coord;
     
     private boolean capture;
     

@@ -33,7 +33,7 @@ public class Pion extends AbstractPiece implements Pions{
 
     @Override
     public boolean isMoveDiagOk() {
-        
+        return true;
     }
     
 }

@@ -82,6 +82,28 @@ public abstract class AbstractPiece implements Pieces {
         return coords;
     }
 
+
+    public Deplacement getMoveDirection(int xFinal, int yFinal) {
+        int x = getX(), y = getY();
+        if (xFinal < x && yFinal < y) 
+            return Deplacement.HAUT_GAUCHE;
+        else if (xFinal < x && yFinal > y) 
+            return Deplacement.BAS_GAUCHE;
+        else if (xFinal > x && yFinal < y)
+            return Deplacement.HAUT_DROITE;
+        else if (xFinal > x && yFinal > y)
+            return Deplacement.BAS_DROITE;
+        else if (xFinal > x && yFinal == y)
+            return Deplacement.DROITE;
+        else if (xFinal < x && yFinal == y)
+            return Deplacement.GAUCHE;
+        else if (xFinal == x && yFinal > y)
+            return Deplacement.HAUT;
+        else if (xFinal == x && yFinal < y)
+            return Deplacement.BAS;
+        return null;
+    }
+    
     public static void main(String args[]) {
         List<AbstractPiece> list = new ArrayList<>();
         int x = 0, y = 0;

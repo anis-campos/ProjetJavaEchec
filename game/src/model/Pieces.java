@@ -16,5 +16,6 @@ public interface Pieces {
     boolean  isMoveOk(int xFinal, int yFinal);
     boolean move(int xFinal, int yFinal);
     List<Coord> movePath (int xFinal, int yFinal);
+
     
 }

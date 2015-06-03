@@ -35,47 +35,38 @@ public class Reine extends AbstractPiece {
 
         List<Coord> ret = new ArrayList<>();
 
-        if (abs(xFinal - getX()) == abs(yFinal - getY())) {
-            //SI DEPLACEMENT DIAGONALE
-
-            while (x != xFinal && y != yFinal) {
-                if (xFinal < x && yFinal < y) {
-                    //[0 0] déplacement en haut à droite
+        while (x != xFinal && y != yFinal) {
+            switch (getMoveDirection(xFinal, yFinal)) {
+                case HAUT_GAUCHE:
                     x--;
                     y--;
-                    ret.add(new Coord(x, y));
-                } else if (xFinal < x && yFinal > y) {
-                    //[0 1] déplacement en bas à gauche
+                    break;
+                case BAS_GAUCHE:
                     x--;
                     y++;
-                    ret.add(new Coord(x, y));
-                } else if (xFinal > x && yFinal < y) {
-                    //[1 0] déplacement en haut à droite
+                    break;
+                case HAUT_DROITE:
                     x++;
                     y--;
-                    ret.add(new Coord(x, y));
-                } else if (xFinal > x && yFinal > y) {
-                    //[1 1] déplacement en bas à droite
+                    break;
+                case BAS_DROITE:
                     x++;
                     y++;
-                    ret.add(new Coord(x, y));
-                }
+                    break;
+                case BAS:
+                    y--;
+                    break;
+                case GAUCHE:
+                    x--;
+                    break;
+                case HAUT:
+                    y++;
+                    break;
+                case DROITE:
+                    x++;
+                    break;
             }
-
-        } else {
-            //SI DEPLACEMENT DROIT
-            while (x != xFinal && y != yFinal) {
-                if (abs(xFinal - getX()) == 0 && (getY() - yFinal) > 0) {
-                    y--;
-                } else if (abs(xFinal - getX()) == 0 && (getY() - yFinal) < 0) {
-                    y++;
-                } else if ((xFinal - getX()) > 0 && abs(getY() - yFinal) == 0) {
-                    x++;
-                } else if ((xFinal - getX()) < 0 && abs(getY() - yFinal) == 0) {
-                    x--;
-                }
-            }
-
+            ret.add(new Coord(x, y));
         }
 
         return ret;

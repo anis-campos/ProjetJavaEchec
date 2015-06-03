@@ -32,21 +32,34 @@ public class Tour extends AbstractPiece {
 
         int x = this.coord.x;
         int y = this.coord.y;
-
+        Deplacement direction = getMoveDirection(xFinal, yFinal);
         List<Coord> ret = new ArrayList<>();
 
         while (x != xFinal && y != yFinal) {
-            if (abs(xFinal - getX()) == 0 && (getY() - yFinal) > 0) {
-                y--;
-            } else if (abs(xFinal - getX()) == 0 && (getY() - yFinal) < 0) {
-                y++;
-            } else if ((xFinal - getX()) > 0 && abs(getY() - yFinal) == 0) {
-                x++;
-            } else if ((xFinal - getX()) < 0 && abs(getY() - yFinal) == 0) {
-                x--;
-            }
-        }
 
+            switch (direction) {
+                case HAUT:
+                    y++;
+                    break;
+
+                case DROITE:
+                    x++;
+                    break;
+
+                case BAS:
+                    y--;
+                    break;
+
+                case GAUCHE:
+                    x--;
+                    break;
+
+                default:
+                    throw new AssertionError(direction.name());
+
+            }
+            ret.add(new Coord(x, y));
+        }
         return ret;
     }
 

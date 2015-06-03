@@ -1,9 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
+
+import java.util.List;
 
 /**
  *
@@ -15,6 +12,7 @@ public interface Pieces {
     String getName();
     int getX();
     int getY();
-    boolean isMoveOk(int xFinal, int yFinal);
+    boolean  isMoveOk(int xFinal, int yFinal);
     boolean move(int xFinal, int yFinal);
+    List<Coord> availableCoords ();
 }

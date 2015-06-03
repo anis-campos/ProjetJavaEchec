@@ -17,12 +17,10 @@ public class Cavalier extends AbstractPiece {
 
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (estDansPlateau(xFinal, yFinal)) {
+            return ((abs(xFinal - getX()) == 2 && abs(yFinal - getY()) == 1)
+                    || (abs(xFinal - getX()) == 1 && abs(yFinal - getY())) == 1)
+        }
     }
 
-    @Override
-    public boolean move(int xFinal, int yFinal) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

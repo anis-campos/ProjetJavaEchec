@@ -24,14 +24,6 @@ public class Pion extends AbstractPiece implements Pions{
     }
 
     @Override
-    public boolean move(int xFinal, int yFinal) {
-        //
-        //
-        this.depart = false;
-        return true;
-    }
-
-    @Override
     public boolean isMoveDiagOk() {
         return true;
     }

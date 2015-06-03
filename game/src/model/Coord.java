@@ -49,7 +49,7 @@ public class Coord implements Serializable, Comparable {
         /*
             Une méthode retournant un entier entre 1 et 64 en fonction des coordonnées
         */
-        private int numeroCase(){
+        public int numeroCase(){
             return this.y*8 + this.x + 1;
         }
 

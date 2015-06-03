@@ -6,6 +6,7 @@
 package model;
 
 import static java.lang.Math.abs;
+import java.util.List;
 
 /**
  *
@@ -26,6 +27,11 @@ public class Cavalier extends AbstractPiece {
                 (abs(xFinal - getX()) == 1 && abs(yFinal - getY()) == 2)
                 );
 
+    }
+
+    @Override
+    public List<Coord> movePath(int xFinal, int yFinal) {
+        return availableCoords();
     }
 
 }

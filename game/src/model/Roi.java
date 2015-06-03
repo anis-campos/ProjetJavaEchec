@@ -6,6 +6,8 @@
 package model;
 
 import static java.lang.Math.abs;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -20,7 +22,18 @@ public class Roi extends AbstractPiece {
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
 
-        return estDansPlateau(xFinal, yFinal)&&(abs(getX() - xFinal) <= 1 && abs(yFinal - getY()) <= 1);
+        return estDansPlateau(xFinal, yFinal) && (abs(getX() - xFinal) <= 1 && abs(yFinal - getY()) <= 1);
+    }
+
+    @Override
+    public List<Coord> movePath(int xFinal, int yFinal) {
+
+        List<Coord> rep = new ArrayList<>();
+
+        rep.add(new Coord(xFinal, yFinal));
+
+        return rep;
+
     }
 
 }

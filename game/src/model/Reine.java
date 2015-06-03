@@ -6,6 +6,8 @@
 package model;
 
 import static java.lang.Math.abs;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -22,10 +24,27 @@ public class Reine extends AbstractPiece {
 
         return estDansPlateau(xFinal, yFinal)
                 && ((abs(xFinal - getX()) == abs(yFinal - getY()))
-                || ((abs(xFinal - getX()) == 0
-                && abs(getY() - yFinal) > 0)
-                || (abs(xFinal - getX()) > 0
-                && abs(getY() - yFinal) == 0)));
+                || (abs(xFinal - getX()) == 0 && abs(getY() - yFinal) > 0)
+                || (abs(xFinal - getX()) > 0 && abs(getY() - yFinal) == 0));
+    }
+
+    @Override
+    public List<Coord> movePath(int xFinal, int yFinal) {
+
+        List<Coord> rep = new ArrayList<>();
+
+        if (abs(xFinal - getX()) == abs(yFinal - getY())){
+            
+        }
+        else if (abs(xFinal - getX()) == 0 && abs(getY() - yFinal) > 0){
+                
+                }
+        else if (abs(xFinal - getX()) > 0 && abs(getY() - yFinal) == 0){
+            
+        }
+
+        
+        return rep;
     }
 
 }

@@ -20,8 +20,11 @@ public class Cavalier extends AbstractPiece {
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
         return estDansPlateau(xFinal, yFinal)&&
-                ((abs(xFinal - getX()) == 2 && abs(yFinal - getY()) == 1) 
-                    || (abs(xFinal - getX()) == 1 && abs(yFinal - getY()) == 1));
+                (
+                (abs(xFinal - getX()) == 2 && abs(yFinal - getY()) == 1) 
+                    || 
+                (abs(xFinal - getX()) == 1 && abs(yFinal - getY()) == 2)
+                );
 
     }
 

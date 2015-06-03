@@ -14,10 +14,13 @@ public abstract class AbstractPiece implements Pieces {
     Couleur couleur;
     Coord coord;
     
+    private boolean capture;
+    
     public AbstractPiece(String name, Couleur couleur, Coord coord){
         this.name = name;
         this.couleur = couleur;
         this.coord = coord;
+        this.capture = false;
     }
     
     @Override
@@ -27,7 +30,8 @@ public abstract class AbstractPiece implements Pieces {
     
     @Override
     public boolean capture(){
-        return false;
+        capture = true;
+        return capture;
     }
     
     @Override

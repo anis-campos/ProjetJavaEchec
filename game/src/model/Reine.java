@@ -5,6 +5,8 @@
  */
 package model;
 
+import static java.lang.Math.abs;
+
 /**
  *
  * @author Anis
@@ -17,8 +19,13 @@ public class Reine extends AbstractPiece {
 
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        return estDansPlateau(xFinal, yFinal)
+                && ((abs(xFinal - getX()) == abs(yFinal - getY()))
+                || ((abs(xFinal - getX()) == 0
+                && abs(getY() - yFinal) > 0)
+                || (abs(xFinal - getX()) > 0
+                && abs(getY() - yFinal) == 0)));
     }
 
-    
 }

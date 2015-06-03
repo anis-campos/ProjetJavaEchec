@@ -5,6 +5,8 @@
  */
 package model;
 
+import static java.lang.Math.abs;
+
 /**
  *
  * @author Anis
@@ -17,10 +19,10 @@ public class Cavalier extends AbstractPiece {
 
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
-        if (estDansPlateau(xFinal, yFinal)) {
-            return ((abs(xFinal - getX()) == 2 && abs(yFinal - getY()) == 1)
-                    || (abs(xFinal - getX()) == 1 && abs(yFinal - getY())) == 1)
-        }
+        return estDansPlateau(xFinal, yFinal)&&
+                ((abs(xFinal - getX()) == 2 && abs(yFinal - getY()) == 1) 
+                    || (abs(xFinal - getX()) == 1 && abs(yFinal - getY()) == 1));
+
     }
 
 }

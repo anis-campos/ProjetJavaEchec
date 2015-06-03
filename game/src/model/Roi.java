@@ -20,7 +20,7 @@ public class Roi extends AbstractPiece {
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
 
-        return (abs(getX() - xFinal) <= 1 && abs(yFinal - getY()) <= 1);
+        return estDansPlateau(xFinal, yFinal)&&(abs(getX() - xFinal) <= 1 && abs(yFinal - getY()) <= 1);
     }
 
 }

@@ -19,7 +19,7 @@ public class Tour extends AbstractPiece {
 
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
-        return ((abs(xFinal - getX()) == 0
+        return estDansPlateau(xFinal, yFinal)&&((abs(xFinal - getX()) == 0
                 && abs(getY() - yFinal) > 0)
                 || (abs(xFinal - getX()) > 0
                 && abs(getY() - yFinal) == 0));

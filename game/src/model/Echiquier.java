@@ -13,11 +13,18 @@ public class Echiquier {
     
     private Jeu jeuBlanc;
     private Jeu jeuNoir;
-    
     private Couleur jeuCourant;
     
+    private String message;
+
+    public Echiquier() {
+        message = "Aucun mouvement n'a encore été fait";
+        jeuBlanc = new Jeu(Couleur.BLANC);
+        jeuNoir = new Jeu(Couleur.NOIR);
+    }
+    
     public String getMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return message;
     }
     
     public boolean isEchecEtMat() {
@@ -57,6 +64,31 @@ public class Echiquier {
     
     public Couleur getColorCurrentPlayer() {
         return this.jeuCourant;
+    }
+    
+    public String toString(){
+        String ret = "", temp;
+        
+        for(int i = 0 ; i < 8 ; i++)
+            ret += "\t  " + i;
+        
+        for(int y = 0 ; y < 8 ; y++){
+            ret += "\n" + y;
+            for(int x = 0 ; x < 8 ; x++){
+                temp = jeuBlanc.afficherPiece(x, y);
+                if(temp == ""){
+                    temp = jeuNoir.afficherPiece(x, y);
+                    if(temp == "")
+                        ret += "\t _____";
+                    else
+                        ret += "\t" + temp;
+                }
+                else
+                    ret += "\t" + temp;
+            }
+        }
+        
+        return ret;
     }
     
 }

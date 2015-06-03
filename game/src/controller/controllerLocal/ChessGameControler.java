@@ -26,6 +26,10 @@ public class ChessGameControler extends AbstractChessGameControler {
 		return chessGame.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);		
 	}
 	
+        
+        public String toString(){
+            return chessGame.toString();
+        }
 
 	
 

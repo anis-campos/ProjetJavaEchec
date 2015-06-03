@@ -18,8 +18,10 @@ public class LauncherCmdLine {
 		
 		ChessGameCmdLine chessGameCmdLine = new ChessGameCmdLine(chessGameControler);	
                 
-                chessGameCmdLine.afficher();
-                
+                while(true){
+                    chessGameCmdLine.afficher();
+                    chessGameCmdLine.demander();
+                }
 	}
 
 }

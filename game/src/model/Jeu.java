@@ -13,8 +13,8 @@ import tools.ChessPieceFactory;
  * @author Antoine
  */
 public class Jeu {
-    Couleur couleur;
-    List<Pieces> listPieces;
+    private Couleur couleur;
+    private List<Pieces> listPieces;
     
     private static final int NB_PIECES = 16;
     
@@ -65,6 +65,14 @@ public class Jeu {
     @Override
     public String toString(){
         return couleur.name();
+    }
+    
+    public String afficherPiece(int x, int y){
+        Pieces piece = findPiece(x, y);
+        if(piece == null)
+            return "";
+        else
+            return piece.getName();
     }
     
     public Couleur getPieceCouleur(int x, int y){

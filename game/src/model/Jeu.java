@@ -5,7 +5,6 @@
  */
 package model;
 
-import com.sun.javafx.animation.TickCalculation;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,27 +61,30 @@ public class Jeu {
     }
     
     public boolean Move(int xInit, int yInit, int xFinal, int yFinal){
-        return true;
+        return mapPieces.get(new Coord(xInit, yInit)).move(xFinal, yFinal);
     }
     
     public boolean isMoveOk(int xInit, int yInit, int xFinal, int yFinal){
-        return true;
+        return mapPieces.get(new Coord(xInit, yInit)).isMoveOk(xFinal, yFinal);
     }
     
     public boolean capture(int xCatch, int yCatch){
-        return true;
+        return mapPieces.get(new Coord(xCatch, yCatch)).capture();
     }
     
     public boolean isPieceToMoveHere(int x, int y){
-        return true;
+        return isPieceHere(x, y);
     }
     
     public boolean isPieceToCatchHere(int x, int y){
-        return true;
+        return isPieceHere(x, y);
     }
     
     public boolean isPieceHere(int x, int y){
-        return true;
+        if(findPiece(x, y) == null)
+            return false;
+        else
+            return true;
     }
     
     public String toString(){
@@ -90,31 +92,31 @@ public class Jeu {
     }
     
     public Couleur getPieceCouleur(int x, int y){
-        return getPiece(x, y).getCouleur();
+        return findPiece(x, y).getCouleur();
     }
     
     public String getPieceName(int x, int y){
-        return getPiece(x, y).getName();
+        return findPiece(x, y).getName();
     }
     
     public String getPieceType(int x, int y){
-        return getPiece(x, y).getClass().getName();
+        return findPiece(x, y).getClass().getName();
     }
     
     public Couleur getCouleur(){
         return this.couleur;
     }
     
-    private AbstractPiece getPiece(int x, int y){
+    private AbstractPiece findPiece(int x, int y){
         return mapPieces.get(new Coord(x, y));
     }
     
     public static void main(String args[]){
         Jeu jeuB = new Jeu(Couleur.BLANC);
-        System.out.println(jeuB.getPiece(0, 0));
+        System.out.println(jeuB.findPiece(0, 0));
         
         
         Jeu jeuN = new Jeu(Couleur.NOIR);
-        System.out.println(jeuN.getPiece(4, 0));
+        System.out.println(jeuN.findPiece(4, 0));
     }
 }

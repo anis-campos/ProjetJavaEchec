@@ -25,6 +25,9 @@ import model.Couleur;
 import tools.ChessImageProvider;
 import controller.ChessGameControlers;
 import java.awt.Font;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 
@@ -49,11 +52,13 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 	private ChessGameControlers chessGameControler;
 	private Dimension boardSize;
 
-        private JLayeredPane layeredPaneGame;
+        private JPanel layeredPaneGame;
         
 	//Panneau stratifi� permettant de superposer plusieurs couches
 	// visibles les unes sur les autres
-	private JLayeredPane layeredPaneEchiquier;
+	private JPanel layeredPaneEchiquier;
+        
+	private JLayeredPane layeredPaneDamier;
         
 	//plateau du jeu d'echec permettant de contenir tous les objets graphiques
 	private JPanel chessBoardGuiContainer;
@@ -81,9 +86,13 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 	private int xAdjustment;
 	private int yAdjustment;
 
-
-
-
+        private ChessGameMessage messageTextBox;
+        private JTextArea messageBox;
+        private JScrollPane messageBoxScrollPane;
+        
+        private JPanel equipeCourantePanel;
+        private JLabel equipeCourante;
+        
 
 
 
@@ -121,15 +130,27 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
                 this.setResizable(false);
                 
-		this.layeredPaneEchiquier = new JLayeredPane();
+		this.layeredPaneEchiquier = new JPanel();
 		this.chessBoardGuiContainer = new JPanel();
 		this.mapSquareCoord = new HashMap<JPanel,Coord>();
 		this.tab2DJPanel = new JPanel[8][8];
                 
-                this.layeredPaneGame = new JLayeredPane();
+                this.layeredPaneGame = new JPanel();
                 this.numerosHorizontaux = new JPanel();
                 this.numerosVerticaux = new JPanel();
-	}
+                
+                this.layeredPaneDamier = new JLayeredPane();
+                
+                this.messageTextBox = new ChessGameMessage();
+                this.messageTextBox.addMessage("La partie peut commencer !");
+                this.messageBox = new JTextArea(this.messageTextBox.getMesageBox(), 8, 60);
+                this.messageBox.setEditable(false);
+                this.messageBoxScrollPane = new JScrollPane(messageBox);
+                this.messageBoxScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                
+                this.equipeCourantePanel = new JPanel();
+                this.equipeCourante = new JLabel("Au tour de l'équipe [" + this.chessGameControler.getColorCurrentPlayer().name() + "]");
+        }
 
 	private void setListener() {
 		layeredPaneEchiquier.addMouseListener(this);
@@ -153,11 +174,21 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 this.layeredPaneGame.setLayout(new BorderLayout());
                 
                 this.layeredPaneGame.add(layeredPaneEchiquier, BorderLayout.CENTER);
-                this.layeredPaneGame.add(new JLabel("test"), BorderLayout.SOUTH);
-                //this.layeredPaneTotal.add(new JPanel(), BorderLayout.);
+                
+                messageBox.setFont(new Font("Arial", Font.ITALIC, 14));
+                this.layeredPaneGame.add(this.messageBoxScrollPane, BorderLayout.SOUTH);
+                
+                this.equipeCourantePanel.add(this.equipeCourante);
+                this.equipeCourante.setHorizontalAlignment(SwingConstants.CENTER);
+                this.equipeCourante.setVerticalAlignment(SwingConstants.CENTER);
+                this.equipeCourante.setFont(new Font("Arial", Font.BOLD, 20));
+                
+                this.layeredPaneGame.add(this.equipeCourantePanel, BorderLayout.NORTH);
                 
                 this.layeredPaneEchiquier.setLayout(new BorderLayout());
-		this.layeredPaneEchiquier.add(this.chessBoardGuiContainer, BorderLayout.CENTER);
+		this.layeredPaneEchiquier.add(this.layeredPaneDamier, BorderLayout.CENTER);
+                chessBoardGuiContainer.setBounds(0, 0, this.boardSize.width - 20, this.boardSize.height - 250);
+                this.layeredPaneDamier.add(this.chessBoardGuiContainer, JLayeredPane.DEFAULT_LAYER);
                 this.layeredPaneEchiquier.add(this.numerosHorizontaux, BorderLayout.NORTH);
                 this.layeredPaneEchiquier.add(this.numerosVerticaux, BorderLayout.WEST);
                 
@@ -271,7 +302,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
 			this.pieceToMove.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
 			this.pieceToMove.setSize(pieceToMove.getWidth(), pieceToMove.getHeight());
-			this.layeredPaneEchiquier.add(pieceToMove, JLayeredPane.DRAG_LAYER);
+			this.layeredPaneDamier.add(pieceToMove, JLayeredPane.DRAG_LAYER);
 		}
 	}
 
@@ -382,7 +413,12 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 		}
 
 		pieceToMove.setVisible(true);
-
+                
+                this.messageTextBox.addMessage(this.chessGameControler.getMessage());
+                this.messageBox.setText(this.messageTextBox.getMesageBox());
+                
+                this.equipeCourante = new JLabel("Au tour de l'équipe [" + this.chessGameControler.getColorCurrentPlayer().name() + "]");
+                
 		this.revalidate();
 	}
 

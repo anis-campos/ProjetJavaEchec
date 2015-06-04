@@ -15,13 +15,16 @@ public class Echiquier {
     private Jeu jeuCourant;
 
     private String message;
+    
+    private boolean echecEtMat;
+    
 
     public Echiquier() {
         jeux = new Jeu[2];
         for (Couleur coul : Couleur.values()) {
             jeux[coul.ordinal()] = new Jeu(coul);
         }
-
+        echecEtMat = false;
         jeuCourant = jeux[Couleur.BLANC.ordinal()];
         /*
          switch (jeuCourant.getCouleur()) {
@@ -39,28 +42,40 @@ public class Echiquier {
     }
 
     public boolean isEchecEtMat() {
-        return false;
+        return echecEtMat;
     }
 
     public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         boolean rep = false;
 
+
+        
         if (Coord.coordonnees_valides(xFinal, yFinal)
                 && !(xInit == xFinal && yInit == yFinal)
                 && jeuCourant.isPieceHere(xInit, yInit)
                 && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
                 && collisionManager(xInit, yInit, xFinal, yFinal)) {
+
+            
+            
+            if (jeuCourant.getPieceType(xInit, yInit).equals("Roi") && roiEnDanger(xFinal, yFinal)) {
+                return false;
+            }
+
             if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal)) {
                 this.message += "\n -> déplacement terminé";
-            }
-            else{
+                testEchecEtMat();
+            } else {
                 message = "Il y a une/plusieurs erreur : \n";
-                if(!Coord.coordonnees_valides(xFinal, yFinal))
-                    message+="\t->Coordonnées hors échiquier\n";
-                if(xInit == xFinal && yInit == yFinal)
-                    message+="\t->Déplacement sur la même case\n";
-                if (!jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal))
-                    message+="\t->Déplaceent interdit pour cette pièce : "+jeuCourant.getPieceType(xInit, yInit);
+                if (!Coord.coordonnees_valides(xFinal, yFinal)) {
+                    message += "\t->Coordonnées hors échiquier\n";
+                }
+                if (xInit == xFinal && yInit == yFinal) {
+                    message += "\t->Déplacement sur la même case\n";
+                }
+                if (!jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)) {
+                    message += "\t->Déplaceent interdit pour cette pièce : " + jeuCourant.getPieceType(xInit, yInit);
+                }
             }
 
         }
@@ -126,6 +141,23 @@ public class Echiquier {
         return rep;
     }
 
+    private boolean captureManager(int xInit, int yInit, int xFinal, int yFinal) {
+
+        if (getAdversaire().isPieceHere(xFinal, yFinal)) {
+            if ("Pion".equals(jeuCourant.getPieceType(xInit, yInit)) && !(Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
+                message = "deplacement interdit";
+                return false;
+            }
+            getAdversaire().capture(xFinal, yFinal);
+            String nomPieceCapture = getAdversaire().getPieceName(xFinal, yFinal);
+            message = "[" + this.jeuCourant.toString() + "] Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : " + nomPieceCapture;
+            return true;
+        }
+
+        message = "La pièce à capturer est une pièce de votre équipe";
+        return false;
+    }
+
     private boolean collisionManager(int xInit, int yInit, int xFinal, int yFinal) {
 
         int x = xInit;
@@ -149,29 +181,34 @@ public class Echiquier {
         }
 
         if (!isPieceHereAllGames(xFinal, yFinal)) {
-            if("Pion".equals(typePiece) && (Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))){
-                 message = "deplacement de pion interdit";
+            if ("Pion".equals(typePiece) && (Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
+                message = "deplacement de pion interdit";
                 return false;
             }
             message = "[" + this.jeuCourant.toString() + "] Déplacement Simple de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ")";
             return true;
-        } 
-        
-        if (getAdversaire().isPieceHere(xFinal, yFinal)) {
-            if ("Pion".equals(typePiece) && !(Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
-                message = "deplacement interdit";
-                return false;
-            }
-            getAdversaire().capture(xFinal, yFinal);
-            String nomPieceCapture = getAdversaire().getPieceName(x, y);
-            message = "[" + this.jeuCourant.toString() + "] Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : " + nomPieceCapture;
-            return true;
         }
-
-        message = "La pièce à capturer est une pièce de votre équipe";
 
         return false;
 
+    }
+
+    private boolean roiEnDanger(int xFinal, int yFinal) {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                if (getAdversaire().isPieceHere(x, y)) {
+                    if (collisionManager(x, y, xFinal, yFinal)) {
+                        message = "Impossible, La pièce "+getAdversaire().getPieceName(x, y) + " "+new Coord(x, y) +" menace le roi";
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void testEchecEtMat() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

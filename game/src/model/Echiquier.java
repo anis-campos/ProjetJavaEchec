@@ -64,6 +64,10 @@ public class Echiquier {
 
             }
 
+            if (collisionInPath(xInit, yInit, xFinal, yFinal)) {
+
+            }
+
             if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal)) {
                 this.message += "\n -> déplacement terminé";
                 testEchecEtMat();

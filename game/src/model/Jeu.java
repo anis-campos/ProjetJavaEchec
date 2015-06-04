@@ -104,14 +104,6 @@ public class Jeu {
         }
     }
 
-    public boolean isCaptured(int x, int y) {
-        Pieces piece = findPiece(x, y);
-        if (piece == null) {
-            return false;
-        } else {
-            return piece.getCapture();
-        }
-    }
 
     public Couleur getCouleur() {
         return this.couleur;
@@ -122,13 +114,12 @@ public class Jeu {
         int i = 0;
 
         while (i < listPieces.size() && !find) {
-            if (listPieces.get(i).getX() == x && listPieces.get(i).getY() == y) {
+            if (listPieces.get(i).getCapture()&&(listPieces.get(i).getX() == x && listPieces.get(i).getY() == y)) {
                 find = true;
             } else {
                 i++;
             }
         }
-
         if (i < listPieces.size()) {
             return listPieces.get(i);
         } else {

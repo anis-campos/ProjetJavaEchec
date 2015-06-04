@@ -50,11 +50,14 @@ public class Echiquier {
         if (Coord.coordonnees_valides(xFinal, yFinal)
                 && !(xInit == xFinal && yInit == yFinal)
                 && jeuCourant.isPieceHere(xInit, yInit)
-                && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
-                && collisionManager(xInit, yInit, xFinal, yFinal)) {
+                && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)) {
 
             if (jeuCourant.getPieceType(xInit, yInit).equals("Roi") && roiEnDanger(xFinal, yFinal)) {
                 return false;
+            }
+
+            if (collisionInPath(xInit, yInit, xFinal, yFinal)) {
+
             }
 
             if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal)) {
@@ -84,7 +87,11 @@ public class Echiquier {
     }
 
     private Jeu getAdversaire() {
-        return jeuCourant.getCouleur() == Couleur.BLANC ? jeux[Couleur.NOIR.ordinal()] : jeux[Couleur.BLANC.ordinal()];
+        return getAdversaire(jeuCourant);
+    }
+
+    private Jeu getAdversaire(Jeu jeu) {
+        return jeu.getCouleur() == Couleur.BLANC ? jeux[Couleur.NOIR.ordinal()] : jeux[Couleur.BLANC.ordinal()];
     }
 
     public Couleur getColorCurrentPlayer() {
@@ -119,7 +126,7 @@ public class Echiquier {
 
         int i = 0;
         while (i < jeux.length && "_____".equals(rep)) {
-            rep = !jeux[i].isCaptured(x, y) && jeux[i].isPieceHere(x, y)
+            rep = jeux[i].isPieceHere(x, y)
                     ? jeux[i].getPieceName(x, y) : rep;
             i++;
         }
@@ -154,7 +161,7 @@ public class Echiquier {
         return false;
     }
 
-    private boolean collisionManager(int xInit, int yInit, int xFinal, int yFinal) {
+    private boolean collisionInPath(int xInit, int yInit, int xFinal, int yFinal) {
 
         int x = xInit;
         int y = yInit;
@@ -167,7 +174,7 @@ public class Echiquier {
 
                 if (isPieceHereAllGames(x, y)) {
                     message = "Il y a une pièce sur la trajectoire";
-                    return false;
+                    return true;
                 }
 
                 x += (int) Math.signum(xFinal - x);
@@ -176,30 +183,7 @@ public class Echiquier {
             }
         }
 
-        if (!isPieceHereAllGames(xFinal, yFinal)) {
-
-            if ("Pion".equals(typePiece) && (Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
-                message = "Déplacement de pion interdit";
-
-                return false;
-            }
-            message = "[" + this.jeuCourant.toString() + "] Déplacement simple de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ")";
-            return true;
-
-        }
-
-        if (getAdversaire().isPieceHere(xFinal, yFinal)) {
-            if ("Pion".equals(typePiece) && !(Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
-                message = "Déplacement interdit";
-                return false;
-            }
-            getAdversaire().capture(xFinal, yFinal);
-            String nomPieceCapture = getAdversaire().getPieceName(x, y);
-            message = "[" + this.jeuCourant.toString() + "] Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : " + nomPieceCapture;
-            return true;
-
-        }
-
+        //Pas de colision
         return false;
 
     }
@@ -208,8 +192,8 @@ public class Echiquier {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 if (getAdversaire().isPieceHere(x, y)) {
-                    if (collisionManager(x, y, xFinal, yFinal)) {
-                        message = "Impossible, La pièce " + getAdversaire().getPieceName(x, y) + " " + new Coord(x, y) + " menace le roi";
+                    if (getAdversaire().isMoveOk(x, y, xFinal, yFinal) && !collisionInPath(x, y, xFinal, yFinal)) {
+                        message = "La pièce " + getAdversaire().getPieceName(x, y) + " " + new Coord(x, y) + " menace le roi";
                         return true;
                     }
                 }

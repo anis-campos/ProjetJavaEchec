@@ -24,38 +24,5 @@ public class Fou extends AbstractPiece {
         return Coord.coordonnees_valides(xFinal, yFinal) && (abs(xFinal - getX()) == abs(yFinal - getY()));
     }
 
-    @Override
-    public List<Coord> movePath(int xFinal, int yFinal) {
-        int x = this.coord.x;
-        int y = this.coord.y;
-        Deplacement direction = getMoveDirection(xFinal, yFinal);
-        List<Coord> ret = new ArrayList<>();
-        while (x != xFinal && y != yFinal) {
-            switch (direction) {
-                case HAUT_GAUCHE:
-                    x--;
-                    y--;
-                    break;
-                case BAS_GAUCHE:
-                    x--;
-                    y++;
-                    break;
-                case HAUT_DROITE:
-                    x++;
-                    y--;
-                    break;
-                case BAS_DROITE:
-                    x++;
-                    y++;
-                    break;
-                default:
-                    throw new AssertionError(direction.name());
-            }
-            ret.add(new Coord(x, y));
-        }
-        return ret;
-    }
-
-
-
+    
 }

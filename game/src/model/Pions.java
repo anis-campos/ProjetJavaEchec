@@ -10,5 +10,5 @@ package model;
  * @author Anis
  */
 public interface Pions {
-    boolean isMoveDiagOk();
+    boolean isMoveDiagOk(int xFinal, int yFinal);
 }

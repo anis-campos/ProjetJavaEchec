@@ -26,10 +26,10 @@ public class Echiquier {
 
         switch (jeuCourant.getCouleur()) {
             case BLANC:
-                message = "L'équipe blanche a gagné le tirage au sort !\n";
+                message = "L'équipe blanche a gagné le tirage au sort !";
                 break;
             case NOIR:
-                message = "L'équipe noire a gagné le tirage au sort !\n";
+                message = "L'équipe noire a gagné le tirage au sort !";
                 break;
         }
     }
@@ -44,14 +44,15 @@ public class Echiquier {
 
     public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         boolean rep = false;
-        if (
-                Coord.coordonnees_valides(xFinal, yFinal) 
-                &&!(xInit == xFinal && yInit == yFinal)
+
+        if (Coord.coordonnees_valides(xFinal, yFinal)
+                && !(xInit == xFinal && yInit == yFinal)
                 && jeuCourant.isPieceHere(xInit, yInit)
                 && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
-                && collisionManager(xInit, yInit, xFinal, yFinal)
-            ) {
-            rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal);
+                && collisionManager(xInit, yInit, xFinal, yFinal)) {
+            if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal))
+                this.message += "\n -> déplacement terminé";
+            
         }
 
         return rep;
@@ -62,13 +63,14 @@ public class Echiquier {
     }
 
     private Jeu getAdversaire() {
-        return jeuCourant.getCouleur() == Couleur.BLANC ? jeux[Couleur.NOIR.ordinal()] : jeux[Couleur.NOIR.ordinal()];
+        return jeuCourant.getCouleur() == Couleur.BLANC ? jeux[Couleur.NOIR.ordinal()] : jeux[Couleur.BLANC.ordinal()];
     }
 
     public Couleur getColorCurrentPlayer() {
         return this.jeuCourant.getCouleur();
     }
 
+    @Override
     public String toString() {
         String ret = "Y \\ X", temp;
 
@@ -116,29 +118,38 @@ public class Echiquier {
 
     private boolean collisionManager(int xInit, int yInit, int xFinal, int yFinal) {
 
-        if (!"Cavalier".equals(jeuCourant.getPieceType(xInit, yInit))) {
+        int x = xInit;
+        int y = yInit;
+        if (!"Cavalier".equals(jeuCourant.getPieceType(x, y))) {
 
-            while (!(xInit == xFinal && yInit == yFinal)) {
+            x += (int) Math.signum(xFinal - x);
+            y += (int) Math.signum(yFinal - y);
+            while (!(x == xFinal && y == yFinal)) {
 
-                if (isPieceHereAllGames(xInit, yInit)) {
+                if (isPieceHereAllGames(x, y)) {
+                    message = "Il y a une pièce sur la trajectoire";
                     return false;
                 }
 
-                xInit += (int) Math.signum(xInit - xFinal);
-                yInit += (int) Math.signum(yInit - yFinal);
+                x += (int) Math.signum(xFinal - x);
+                y += (int) Math.signum(yFinal - y);
 
             }
         }
 
         if (!isPieceHereAllGames(xFinal, yFinal)) {
+            message = "[" + this.jeuCourant.toString() + "] Déplacement Simple de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ")";
             return true;
         }
 
         if (getAdversaire().isPieceHere(xFinal, yFinal)) {
             getAdversaire().capture(xFinal, yFinal);
+            String nomPieceCapture = getAdversaire().getPieceName(x, y);
+            message = "[" + this.jeuCourant.toString() + "] Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : "+nomPieceCapture;
             return true;
         }
 
+        message = "La pièce à capturer est une pièce de votre équipe";
         return false;
 
     }

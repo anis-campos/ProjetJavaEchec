@@ -44,10 +44,13 @@ public class Echiquier {
 
     public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         boolean rep = false;
-        if (!(xInit == xFinal && yInit == yFinal)
+        if (
+                Coord.coordonnees_valides(xFinal, yFinal) 
+                &&!(xInit == xFinal && yInit == yFinal)
                 && jeuCourant.isPieceHere(xInit, yInit)
                 && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
-                && collisionManager(xInit, yInit, xFinal, yFinal)) {
+                && collisionManager(xInit, yInit, xFinal, yFinal)
+            ) {
             rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal);
         }
 

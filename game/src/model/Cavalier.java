@@ -1,4 +1,3 @@
-
 package model;
 
 import static java.lang.Math.abs;
@@ -17,15 +16,9 @@ public class Cavalier extends AbstractPiece {
 
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
-        return Coord.coordonnees_valides(xFinal, yFinal)&&
-                (
-                (abs(xFinal - getX()) == 2 && abs(yFinal - getY()) == 1) 
-                    || 
-                (abs(xFinal - getX()) == 1 && abs(yFinal - getY()) == 2)
-                );
+        return (abs(xFinal - getX()) == 2 && abs(yFinal - getY()) == 1)
+                || (abs(xFinal - getX()) == 1 && abs(yFinal - getY()) == 2);
 
     }
-
-
 
 }

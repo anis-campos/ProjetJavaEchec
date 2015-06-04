@@ -24,6 +24,8 @@ import model.Coord;
 import model.Couleur;
 import tools.ChessImageProvider;
 import controller.ChessGameControlers;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 
 /**
@@ -47,10 +49,12 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 	private ChessGameControlers chessGameControler;
 	private Dimension boardSize;
 
+        private JLayeredPane layeredPaneGame;
+        
 	//Panneau stratifi� permettant de superposer plusieurs couches
 	// visibles les unes sur les autres
-	private JLayeredPane layeredPane;
-
+	private JLayeredPane layeredPaneEchiquier;
+        
 	//plateau du jeu d'echec permettant de contenir tous les objets graphiques
 	private JPanel chessBoardGuiContainer;
 
@@ -59,6 +63,9 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
 	// carr� sur laquelle est pos�e la piece � d�placer
 	private JPanel pieceToMoveSquare;
+        
+        private JPanel numerosVerticaux;
+        private JPanel numerosHorizontaux;
 
 	// map permettant d'associer un JPanel (carr� noir ou blanc)
 	// � ses coordonn�es sur l'�chiquier
@@ -112,16 +119,21 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 		this.chessGameControler = chessGameControler;  
 		this.boardSize = boardSize;
 
-
-		this.layeredPane = new JLayeredPane();
+                this.setResizable(false);
+                
+		this.layeredPaneEchiquier = new JLayeredPane();
 		this.chessBoardGuiContainer = new JPanel();
 		this.mapSquareCoord = new HashMap<JPanel,Coord>();
 		this.tab2DJPanel = new JPanel[8][8];
+                
+                this.layeredPaneGame = new JLayeredPane();
+                this.numerosHorizontaux = new JPanel();
+                this.numerosVerticaux = new JPanel();
 	}
 
 	private void setListener() {
-		layeredPane.addMouseListener(this);
-		layeredPane.addMouseMotionListener(this);
+		layeredPaneEchiquier.addMouseListener(this);
+		layeredPaneEchiquier.addMouseMotionListener(this);
 	}
 
 
@@ -136,14 +148,37 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 		JLabel pieceGuiLabel = null;
 
 		// cr�ation du plateau de l'�chiquier sous forme de damier 8*8 
-		setContentPane(this.layeredPane);		
-		this.layeredPane.add(this.chessBoardGuiContainer, JLayeredPane.DEFAULT_LAYER);
+                this.setContentPane(layeredPaneGame);
+                
+                this.layeredPaneGame.setLayout(new BorderLayout());
+                
+                this.layeredPaneGame.add(layeredPaneEchiquier, BorderLayout.CENTER);
+                this.layeredPaneGame.add(new JLabel("test"), BorderLayout.SOUTH);
+                //this.layeredPaneTotal.add(new JPanel(), BorderLayout.);
+                
+                this.layeredPaneEchiquier.setLayout(new BorderLayout());
+		this.layeredPaneEchiquier.add(this.chessBoardGuiContainer, BorderLayout.CENTER);
+                this.layeredPaneEchiquier.add(this.numerosHorizontaux, BorderLayout.NORTH);
+                this.layeredPaneEchiquier.add(this.numerosVerticaux, BorderLayout.WEST);
+                
 		this.chessBoardGuiContainer.setLayout( new GridLayout(8, 8) );
-		this.chessBoardGuiContainer.setBounds(0, 0, boardSize.width-10, boardSize.height-30);
+                this.numerosHorizontaux.setLayout(new GridLayout(1, 8));
+                this.numerosVerticaux.setLayout(new GridLayout(8, 1));
 
 		// remplissage du damier avec les carr�s et quand n�cessaire
 		// les images des pi�ces
 		for (int i = 0; i<8; i++){
+                        JLabel numeroHorizontal = new JLabel(Integer.toString(i+1));
+                        numeroHorizontal.setHorizontalAlignment(SwingConstants.CENTER);
+                        JLabel numeroVertical = new JLabel(Integer.toString(i+1));
+                        numeroVertical.setVerticalAlignment(SwingConstants.CENTER);
+                        
+                        numeroHorizontal.setFont(new Font("Agency FB", Font.BOLD, 30));
+                        numeroVertical.setFont(new Font("Agency FB", Font.BOLD, 30));
+                        
+                        numerosHorizontaux.add(new JPanel().add(numeroHorizontal));
+                        numerosVerticaux.add(new JPanel().add(numeroVertical));
+                        
 			for (int j = 0; j<8; j++) {
 
 				// cr�ation d'un JPanel pour le carr� blanc ou noir
@@ -236,7 +271,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
 			this.pieceToMove.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
 			this.pieceToMove.setSize(pieceToMove.getWidth(), pieceToMove.getHeight());
-			this.layeredPane.add(pieceToMove, JLayeredPane.DRAG_LAYER);
+			this.layeredPaneEchiquier.add(pieceToMove, JLayeredPane.DRAG_LAYER);
 		}
 	}
 

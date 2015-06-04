@@ -31,7 +31,7 @@ public class LauncherGUI {
 		JFrame frame;	
 		Dimension dim;
 	
-		dim = new Dimension(700, 700);
+		dim = new Dimension(900, 900);
 		
 		chessGame = new ChessGame();	
 		chessGameControler = new ChessGameControler(chessGame);

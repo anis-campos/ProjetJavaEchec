@@ -27,6 +27,7 @@ import controller.ChessGameControlers;
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
@@ -417,8 +418,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 this.messageTextBox.addMessage(this.chessGameControler.getMessage());
                 this.messageBox.setText(this.messageTextBox.getMesageBox());
                 
-                this.equipeCourante = new JLabel("Au tour de l'équipe [" + this.chessGameControler.getColorCurrentPlayer().name() + "]");
-                
+                ((JLabel) this.equipeCourantePanel.getComponent(0)).setText("Au tour de l'équipe [" + this.chessGameControler.getColorCurrentPlayer().name() + "]");
 		this.revalidate();
 	}
 

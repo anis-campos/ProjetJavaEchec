@@ -366,7 +366,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 			// la m�thode update est appel�e pour rafraichir l'affichage
 		}
 
-		System.out.println(chessGameControler.getMessage());	// A commenter sauf pour v�rifier si OK
+		//System.out.println(chessGameControler.getMessage());	// A commenter sauf pour v�rifier si OK
 
 
 	}

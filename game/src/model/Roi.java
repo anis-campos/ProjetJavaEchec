@@ -25,15 +25,4 @@ public class Roi extends AbstractPiece {
         return Coord.coordonnees_valides(xFinal, yFinal) && (abs(getX() - xFinal) <= 1 && abs(yFinal - getY()) <= 1);
     }
 
-    @Override
-    public List<Coord> movePath(int xFinal, int yFinal) {
-
-        List<Coord> rep = new ArrayList<>();
-
-        rep.add(new Coord(xFinal, yFinal));
-
-        return rep;
-
-    }
-
 }

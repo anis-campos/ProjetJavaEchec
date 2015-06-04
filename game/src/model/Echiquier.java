@@ -5,26 +5,26 @@
  */
 package model;
 
-import java.util.List;
-
 /**
  *
  * @author Antoine
  */
 public class Echiquier {
 
-    private Jeu jeuBlanc;
-    private Jeu jeuNoir;
-    private Couleur jeuCourant;
+    private Jeu jeux[];
+    private Jeu jeuCourant;
 
     private String message;
 
     public Echiquier() {
-        jeuBlanc = new Jeu(Couleur.BLANC);
-        jeuNoir = new Jeu(Couleur.NOIR);
-        jeuCourant = Couleur.values()[(int) Math.round(Math.random())];
+        jeux = new Jeu[2];
+        for (Couleur coul : Couleur.values()) {
+            jeux[coul.ordinal()] = new Jeu(coul);
+        }
 
-        switch (jeuCourant) {
+        jeuCourant = jeux[(int) Math.round(Math.random())];
+
+        switch (jeuCourant.getCouleur()) {
             case BLANC:
                 message = "L'équipe blanche a gagné le tirage au sort !\n";
                 break;
@@ -44,78 +44,26 @@ public class Echiquier {
 
     public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         boolean rep = false;
-        switch (this.jeuCourant) {
-            case BLANC:
-                if (jeuBlanc.isPieceHere(xInit, yInit)
-                        && !(xInit == xFinal && yInit == yFinal)
-                        && jeuBlanc.isMoveOk(xInit, yInit, xFinal, yFinal)) {
-                    if (collisionManager(jeuBlanc.movePath(xInit, yInit, xFinal, yFinal))) {
-                        rep = jeuBlanc.Move(xInit, yInit, xFinal, yFinal);
-                    }
-                }
-                break;
-            case NOIR:
-                if (jeuNoir.isPieceHere(xInit, yInit)
-                        && !(xInit == xFinal && yInit == yFinal)
-                        && jeuNoir.isMoveOk(xInit, yInit, xFinal, yFinal)) {
-
-                    if (collisionManager(jeuNoir.movePath(xInit, yInit, xFinal, yFinal))) {
-                        rep = jeuNoir.Move(xInit, yInit, xFinal, yFinal);
-                    }
-                }
-                break;
+        if (!(xInit == xFinal && yInit == yFinal)
+                && jeuCourant.isPieceHere(xInit, yInit)
+                && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
+                && collisionManager(xInit, yInit, xFinal, yFinal)) {
+            rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal);
         }
-        this.message = "[" + this.jeuCourant.toString() + "] Déplacement de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : OK : déplacement simple\n";
 
         return rep;
     }
 
-    //si renvoie true : OK pour MOVE
-    private boolean collisionManager(List<Coord> listCoordPath) {
-        int i = 0;
-        boolean haveNotAFriendInPath = true;
-        while (i < listCoordPath.size() && haveNotAFriendInPath) {
-            if (jeuBlanc.isPieceHere(listCoordPath.get(i).x, listCoordPath.get(i).y)
-                    || jeuNoir.isPieceHere(listCoordPath.get(i).x, listCoordPath.get(i).y)) {
-                haveNotAFriendInPath = false;
-            }
-
-            i++;
-        }
-
-        if (i == listCoordPath.size() && !haveNotAFriendInPath) {
-            int dernierX = listCoordPath.get(listCoordPath.size() - 1).x;
-            int dernierY = listCoordPath.get(listCoordPath.size() - 1).y;
-            switch (this.jeuCourant) {
-                case BLANC:
-                    if (this.jeuNoir.isPieceHere(dernierX, dernierY)) {
-                        this.jeuNoir.capture(dernierX, dernierY);
-                    }
-                    break;
-                case NOIR:
-                    if (this.jeuBlanc.isPieceHere(dernierX, dernierY)) {
-                        this.jeuBlanc.capture(dernierX, dernierY);
-                    }
-                    break;
-            }
-        }
-
-        return haveNotAFriendInPath;
+    public void switchJoueur() {
+        jeuCourant = getAdversaire();
     }
 
-    public void switchJoueur() {
-        switch (this.jeuCourant) {
-            case BLANC:
-                this.jeuCourant = Couleur.NOIR;
-                break;
-            case NOIR:
-                this.jeuCourant = Couleur.BLANC;
-                break;
-        }
+    private Jeu getAdversaire() {
+        return jeuCourant.getCouleur() == Couleur.BLANC ? jeux[Couleur.NOIR.ordinal()] : jeux[Couleur.NOIR.ordinal()];
     }
 
     public Couleur getColorCurrentPlayer() {
-        return this.jeuCourant;
+        return this.jeuCourant.getCouleur();
     }
 
     public String toString() {
@@ -129,13 +77,67 @@ public class Echiquier {
             ret += "\n" + y;
             for (int x = 0; x < 8; x++) {
                 ret += "\t";
-                ret += !jeuBlanc.isCaptured(x, y) && jeuBlanc.isPieceHere(x, y)
-                        ? jeuBlanc.getPieceName(x, y)
-                        : !jeuNoir.isCaptured(x, y) && jeuNoir.isPieceHere(x, y) ? jeuNoir.getPieceName(x, y) : "_____";
+                for (Jeu jeu : jeux) {
+
+                }
+                ret += getCase(x, y);
             }
         }
 
         return ret;
+    }
+
+    private String getCase(int x, int y) {
+
+        String rep = "_____";
+
+        int i = 0;
+        while (i < jeux.length && "_____".equals(rep)) {
+            rep = !jeux[i].isCaptured(x, y) && jeux[i].isPieceHere(x, y)
+                    ? jeux[i].getPieceName(x, y) : rep;
+            i++;
+        }
+
+        return rep;
+    }
+
+    private boolean isPieceHereAllGames(int x, int y) {
+        boolean rep = false;
+        for (Jeu jeu : jeux) {
+            if (jeu.isPieceHere(x, y)) {
+                return true;
+            }
+        }
+        return rep;
+    }
+
+    private boolean collisionManager(int xInit, int yInit, int xFinal, int yFinal) {
+
+        if (!"Cavalier".equals(jeuCourant.getPieceType(xInit, yInit))) {
+
+            while (!(xInit == xFinal && yInit == yFinal)) {
+
+                if (isPieceHereAllGames(xInit, yInit)) {
+                    return false;
+                }
+
+                xInit += (int) Math.signum(xInit - xFinal);
+                yInit += (int) Math.signum(yInit - yFinal);
+
+            }
+        }
+
+        if (!isPieceHereAllGames(xFinal, yFinal)) {
+            return true;
+        }
+
+        if (getAdversaire().isPieceHere(xFinal, yFinal)) {
+            getAdversaire().capture(xFinal, yFinal);
+            return true;
+        }
+
+        return false;
+
     }
 
 }

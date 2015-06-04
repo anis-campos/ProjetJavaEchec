@@ -104,9 +104,7 @@ public class Jeu {
         return this.couleur;
     }
     
-    public List<Coord> movePath(int xInit, int yInit, int xFinal, int yFinal){
-        return findPiece(xInit, yInit).movePath(xFinal, yFinal);
-    }
+
     
     private Pieces findPiece(int x, int y){
         boolean find = false;

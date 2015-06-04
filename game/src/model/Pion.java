@@ -6,8 +6,6 @@
 package model;
 
 import static java.lang.Math.abs;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -38,10 +36,10 @@ public class Pion extends AbstractPiece implements Pions {
         } else {
             switch (this.couleur) {
                 case BLANC:
-                    return (getY() - yFinal <= 1) /*&& (abs(getX() - xFinal) <= 1)*/;
+                    return (getY() - yFinal <= 1);
 
                 case NOIR:
-                    return (yFinal - getY() <= 1) /*&& (abs(getX() - xFinal) <= 1)*/;
+                    return (yFinal - getY() <= 1) ;
                 default:
                     return false;
             }
@@ -57,30 +55,22 @@ public class Pion extends AbstractPiece implements Pions {
     }
 
     @Override
-    public boolean isMoveDiagOk() {
-        return true;
+    public boolean isMoveDiagOk(int xFinal, int yFinal) {
+
+        if(abs(getX()-xFinal)!=1)
+            return false;
+        switch (this.couleur) {
+                case BLANC:
+                    return (getY() - yFinal == 1);
+
+                case NOIR:
+                    return (yFinal - getY() == 1) ;
+                default:
+                    return false;
+            }
     }
 
-    @Override
-    public List<Coord> movePath(int xFinal, int yFinal) {
-        List<Coord> ret = new ArrayList<>();
-        
-        if(abs(yFinal - this.coord.y) == 2){
-            //si le pion se déplace de deux cases
-            //on retient d'abord la première case (switch-case)
-            switch(this.couleur){
-                case BLANC:
-                    ret.add(new Coord(xFinal, this.coord.y - 1));
-                    break;
-                case NOIR:
-                    ret.add(new Coord(xFinal, this.coord.y + 1));
-                    break;
-            }
-        }
-        
-        ret.add(new Coord(xFinal, yFinal));
-        
-        return ret;
-    }
+
+  
 
 }

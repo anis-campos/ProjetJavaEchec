@@ -28,48 +28,5 @@ public class Reine extends AbstractPiece {
                 || (abs(xFinal - getX()) > 0 && abs(getY() - yFinal) == 0));
     }
 
-    @Override
-    public List<Coord> movePath(int xFinal, int yFinal) {
-        int x = this.coord.x;
-        int y = this.coord.y;
-
-        List<Coord> ret = new ArrayList<>();
-
-        while (x != xFinal && y != yFinal) {
-            switch (getMoveDirection(xFinal, yFinal)) {
-                case HAUT_GAUCHE:
-                    x--;
-                    y--;
-                    break;
-                case BAS_GAUCHE:
-                    x--;
-                    y++;
-                    break;
-                case HAUT_DROITE:
-                    x++;
-                    y--;
-                    break;
-                case BAS_DROITE:
-                    x++;
-                    y++;
-                    break;
-                case BAS:
-                    y--;
-                    break;
-                case GAUCHE:
-                    x--;
-                    break;
-                case HAUT:
-                    y++;
-                    break;
-                case DROITE:
-                    x++;
-                    break;
-            }
-            ret.add(new Coord(x, y));
-        }
-
-        return ret;
-    }
-
+  
 }

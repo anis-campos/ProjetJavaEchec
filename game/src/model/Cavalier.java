@@ -26,12 +26,6 @@ public class Cavalier extends AbstractPiece {
 
     }
 
-    @Override
-    public List<Coord> movePath(int xFinal, int yFinal) {
-        List<Coord> rep = new ArrayList<>();
-        rep.add(new Coord(xFinal, yFinal));
-        return rep;
-    }
 
 
 }

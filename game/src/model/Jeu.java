@@ -135,6 +135,24 @@ public class Jeu {
             return null;
         }
     }
+    
+    public boolean promote(int x, int y, String newType){
+        Pieces pieceToPromote = findPiece(x, y);
+        
+        this.listPieces.remove(pieceToPromote);
+        
+        if(newType.equals("Cavalier"))
+            this.listPieces.add(new Cavalier(pieceToPromote.getName(), couleur, new Coord(pieceToPromote.getX(), pieceToPromote.getY())));
+        else if(newType.equals("Tour"))
+            this.listPieces.add(new Tour(pieceToPromote.getName(), couleur, new Coord(pieceToPromote.getX(), pieceToPromote.getY())));
+        else if(newType.equals("Reine"))
+            this.listPieces.add(new Reine(pieceToPromote.getName(), couleur, new Coord(pieceToPromote.getX(), pieceToPromote.getY())));
+        if(newType.equals("Fou"))
+            this.listPieces.add(new Fou(pieceToPromote.getName(), couleur, new Coord(pieceToPromote.getX(), pieceToPromote.getY())));
+                
+        
+        return true;
+    }
 
     public static void main(String args[]) {
         Jeu jeuB = new Jeu(Couleur.BLANC);

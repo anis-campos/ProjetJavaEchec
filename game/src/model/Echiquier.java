@@ -180,4 +180,12 @@ public class Echiquier {
 
     }
 
+    public boolean isPionToPromote(int x, int y) {
+        return ("Pion".equals(jeuCourant.getPieceType(x, y)) && jeuCourant.getCouleur() == Couleur.BLANC) ? y == 0 : y == 7;
+    }
+
+    public boolean promote(int x, int y, String newType) {
+        return this.jeuCourant.promote(x, y, newType);
+    }
+
 }

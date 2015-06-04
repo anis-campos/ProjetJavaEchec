@@ -22,13 +22,20 @@ public class ChessGameControler extends AbstractChessGameControler {
 		super(chessGame);
 	}
 	
+        @Override
 	public boolean move(Coord initCoord, Coord finalCoord) {
 		return chessGame.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);		
 	}
 	
         
+        @Override
         public String toString(){
             return chessGame.toString();
+        }
+
+        @Override
+        public boolean promote(Coord coord, String newType) {
+            return chessGame.promote(coord.x, coord.y, newType);
         }
 
 	

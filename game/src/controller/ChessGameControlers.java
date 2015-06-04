@@ -7,6 +7,8 @@ public interface ChessGameControlers {
 
 	boolean move(Coord initCoord, Coord finalCoord);
 
+        boolean promote(Coord coord, String newType);
+        
 	String getMessage();
 	
 	public boolean isEchecEtMat();

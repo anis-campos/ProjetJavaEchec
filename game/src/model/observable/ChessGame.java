@@ -52,17 +52,33 @@ public class ChessGame extends Observable{
 	 */
 	public boolean move (int xInit, int yInit, int xFinal, int yFinal){
 		boolean ret = false;
+                boolean pionPromoted = false;
 		if (!echiquier.isEchecEtMat()) {
 			ret = echiquier.move(xInit, yInit, xFinal, yFinal);
+                        if(ret)
+                            pionPromoted = echiquier.isPionToPromote(xFinal, yFinal);
+		}
+		if (ret && !pionPromoted){
+			echiquier.switchJoueur();
+		}
+		this.setChanged();
+                
+		this.notifyObservers(new Object[]{xInit, yInit, xFinal, yFinal, ret, pionPromoted, getColorCurrentPlayer()});
+		return ret;	
+	}
+        
+        public boolean promote(int x, int y, String newType){
+            boolean ret = false;
+		if (!echiquier.isEchecEtMat()) {
+			ret = echiquier.promote(x, y, newType);
 		}
 		if (ret){
 			echiquier.switchJoueur();
-			
 		}
 		this.setChanged();
-		this.notifyObservers(new Object[]{xInit, yInit, xFinal, yFinal, ret});
-		return ret;	
-	}
+		this.notifyObservers(new Object[]{x, y});
+		return ret;
+        }
 
 	public boolean isEchecEtMat(){
 		return echiquier.isEchecEtMat();		

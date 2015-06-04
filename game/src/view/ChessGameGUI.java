@@ -25,6 +25,7 @@ import model.Couleur;
 import tools.ChessImageProvider;
 import controller.ChessGameControlers;
 import java.awt.Font;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -381,45 +382,71 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
-
+                
 		// Tableau qui contient x, y init x, y final,
 		// plus 1 bool�en qui indique si le d�placement a �t� effectif
 		Object[] args = (Object[]) arg1;
-		boolean isMoveOk = (Boolean) args[4];
-
-
-		// carr� de destination
-		JPanel targetSquare;
-
-		pieceToMoveSquare = this.tab2DJPanel[(Integer) args[0]][(Integer) args[1]];
-		pieceToMove = (JLabel) pieceToMoveSquare.getComponent(0);	
-
-		pieceToMove.setVisible(false);
-
-		if (isMoveOk){
-
-			targetSquare = this.tab2DJPanel[(Integer) args[2]][(Integer) args[3]];
-			// s'il existe une pi�ce � prendre
-			try {
-				targetSquare.getComponent(0);
-				//suppression de l'image de la piece sur laquelle on deplace la piece courante
-				targetSquare.remove(0);
-			}
-			catch (Exception e) {
-			}
-			finally {
-				// rendre effectif le d�placement de la pi�ce
-				targetSquare.add( pieceToMove );	
-			}
-		}
-
-		pieceToMove.setVisible(true);
+                boolean promotion = false;
+                boolean isMoveOk = false;
+                boolean isPionToPromote = false;
                 
+                if(args.length == 2)
+                    promotion = true;
+                else{
+                    isMoveOk = (Boolean) args[4];
+                    isPionToPromote = (Boolean) args[5];
+                }
+                // carr� de destination
+                JPanel targetSquare;
+
+                pieceToMoveSquare = this.tab2DJPanel[(Integer) args[0]][(Integer) args[1]];
+                pieceToMove = (JLabel) pieceToMoveSquare.getComponent(0);	
+
+                pieceToMove.setVisible(false);
+
+                if (isMoveOk || promotion){
+                        if(isMoveOk)
+                            targetSquare = this.tab2DJPanel[(Integer) args[2]][(Integer) args[3]];
+                        else
+                            targetSquare = this.tab2DJPanel[(Integer) args[0]][(Integer) args[1]];
+                        // s'il existe une pi�ce � prendre
+                        try {
+                                targetSquare.getComponent(0);
+                                //suppression de l'image de la piece sur laquelle on deplace la piece courante
+                                targetSquare.remove(0);
+                        }
+                        catch (Exception e) {
+                        }
+                        finally {
+                                // rendre effectif le d�placement de la pi�ce
+                                targetSquare.add( pieceToMove );	
+                        }
+                }
+
+                pieceToMove.setVisible(true);
+
+                if(isPionToPromote){
+
+                    Object[] possibilities = {"Reine", "Fou", "Tour", "Cavalier"};
+                    String s = (String)JOptionPane.showInputDialog(
+                                        this,
+                                        "Votre pion peut être promu !!",
+                                        "Promotion du pion",
+                                        JOptionPane.PLAIN_MESSAGE,
+                                        null,
+                                        possibilities,
+                                        "Reine");
+
+                    this.chessGameControler.promote(new Coord((int)args[2], (int)args[3]), s);
+                }
+
+
                 this.messageTextBox.addMessage(this.chessGameControler.getMessage());
                 this.messageBox.setText(this.messageTextBox.getMesageBox());
-                
+
                 ((JLabel) this.equipeCourantePanel.getComponent(0)).setText("Au tour de l'équipe [" + this.chessGameControler.getColorCurrentPlayer().name() + "]");
-		this.revalidate();
+                
+                this.revalidate();
 	}
 
 	@Override

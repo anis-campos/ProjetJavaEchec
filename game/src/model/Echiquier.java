@@ -48,21 +48,27 @@ public class Echiquier {
         if (Coord.coordonnees_valides(xFinal, yFinal)
                 && !(xInit == xFinal && yInit == yFinal)
                 && jeuCourant.isPieceHere(xInit, yInit)
-                && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
-                && collisionManager(xInit, yInit, xFinal, yFinal)) {
-            if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal)) {
-                this.message += "\n -> déplacement terminé";
-            }
-            else{
-                message = "Il y a une/plusieurs erreur : \n";
-                if(!Coord.coordonnees_valides(xFinal, yFinal))
-                    message+="\t->Coordonnées hors échiquier\n";
-                if(xInit == xFinal && yInit == yFinal)
-                    message+="\t->Déplacement sur la même case\n";
-                if (!jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal))
-                    message+="\t->Déplaceent interdit pour cette pièce : "+jeuCourant.getPieceType(xInit, yInit);
-            }
-
+                && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)) {
+            if (collisionManager(xInit, yInit, xFinal, yFinal)){
+                if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal)) {
+                    this.message += "\n -> déplacement terminé";
+                }
+                else{
+                    this.message += "\n -> il y a eu un problème dans le déplacement";
+                }
+            }            
+        }
+        else{
+            message = "Il y a une/plusieurs erreur : ";
+            if(!Coord.coordonnees_valides(xFinal, yFinal))
+                message+="\n\t-> Coordonnées hors échiquier";
+            if(!jeuCourant.isPieceHere(xInit, yInit))
+                message+="\n\t-> Ce n'est pas une pièce de votre équipe";
+            else if(xInit == xFinal && yInit == yFinal)
+                message+="\n\t-> Déplacement sur la même case";
+            else if (!jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal))
+                message+="\n\t-> Déplacement interdit pour cette pièce : "+jeuCourant.getPieceType(xInit, yInit);
+            
         }
 
         return rep;
@@ -150,16 +156,16 @@ public class Echiquier {
 
         if (!isPieceHereAllGames(xFinal, yFinal)) {
             if("Pion".equals(typePiece) && (Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))){
-                 message = "deplacement de pion interdit";
+                 message = "Déplacement de pion interdit";
                 return false;
             }
-            message = "[" + this.jeuCourant.toString() + "] Déplacement Simple de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ")";
+            message = "[" + this.jeuCourant.toString() + "] Déplacement simple de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ")";
             return true;
         } 
         
         if (getAdversaire().isPieceHere(xFinal, yFinal)) {
             if ("Pion".equals(typePiece) && !(Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
-                message = "deplacement interdit";
+                message = "Déplacement interdit";
                 return false;
             }
             getAdversaire().capture(xFinal, yFinal);

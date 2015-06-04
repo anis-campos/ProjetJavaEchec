@@ -282,16 +282,18 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 		Point pieceToMoveLocation = null;
 		JLabel sauvPieceToMove;
 
-		Component c =  this.chessBoardGuiContainer.findComponentAt(e.getX(), e.getY());
+		Component c =  this.chessBoardGuiContainer.findComponentAt(e.getX()-10, e.getY()-30);
 
 		this.pieceToMove = null;
 
 		// si l'utilisateur a s�lectionn� une pi�ce
 		if (c instanceof JLabel) {
 
+                        
 			this.pieceToMove = (JLabel)c;
 			this.pieceToMoveSquare=(JPanel)c.getParent();
-
+                        
+                        
 			// avant de d�placer la pi�ce, on en positionne un clone invisible
 			// au m�me endroit : cela servira lors du rafraichissement de la fen�tre (update)
 			sauvPieceToMove = new JLabel(this.pieceToMove.getIcon());

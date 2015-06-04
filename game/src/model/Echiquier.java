@@ -22,16 +22,16 @@ public class Echiquier {
             jeux[coul.ordinal()] = new Jeu(coul);
         }
 
-        jeuCourant = jeux[(int) Math.round(Math.random())];
-
-        switch (jeuCourant.getCouleur()) {
-            case BLANC:
-                message = "L'équipe blanche a gagné le tirage au sort !";
-                break;
-            case NOIR:
-                message = "L'équipe noire a gagné le tirage au sort !";
-                break;
-        }
+        jeuCourant = jeux[Couleur.BLANC.ordinal()];
+        /*
+         switch (jeuCourant.getCouleur()) {
+         case BLANC:
+         message = "L'équipe blanche a gagné le tirage au sort !";
+         break;
+         case NOIR:
+         message = "L'équipe noire a gagné le tirage au sort !";
+         break;
+         }*/
     }
 
     public String getMessage() {
@@ -50,9 +50,19 @@ public class Echiquier {
                 && jeuCourant.isPieceHere(xInit, yInit)
                 && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
                 && collisionManager(xInit, yInit, xFinal, yFinal)) {
-            if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal))
+            if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal)) {
                 this.message += "\n -> déplacement terminé";
-            
+            }
+            else{
+                message = "Il y a une/plusieurs erreur : \n";
+                if(!Coord.coordonnees_valides(xFinal, yFinal))
+                    message+="\t->Coordonnées hors échiquier\n";
+                if(xInit == xFinal && yInit == yFinal)
+                    message+="\t->Déplacement sur la même case\n";
+                if (!jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal))
+                    message+="\t->Déplaceent interdit pour cette pièce : "+jeuCourant.getPieceType(xInit, yInit);
+            }
+
         }
 
         return rep;
@@ -120,7 +130,8 @@ public class Echiquier {
 
         int x = xInit;
         int y = yInit;
-        if (!"Cavalier".equals(jeuCourant.getPieceType(x, y))) {
+        String typePiece = jeuCourant.getPieceType(x, y);
+        if (!"Cavalier".equals(typePiece)) {
 
             x += (int) Math.signum(xFinal - x);
             y += (int) Math.signum(yFinal - y);
@@ -138,18 +149,27 @@ public class Echiquier {
         }
 
         if (!isPieceHereAllGames(xFinal, yFinal)) {
+            if("Pion".equals(typePiece) && (Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))){
+                 message = "deplacement de pion interdit";
+                return false;
+            }
             message = "[" + this.jeuCourant.toString() + "] Déplacement Simple de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ")";
             return true;
-        }
-
+        } 
+        
         if (getAdversaire().isPieceHere(xFinal, yFinal)) {
+            if ("Pion".equals(typePiece) && !(Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
+                message = "deplacement interdit";
+                return false;
+            }
             getAdversaire().capture(xFinal, yFinal);
             String nomPieceCapture = getAdversaire().getPieceName(x, y);
-            message = "[" + this.jeuCourant.toString() + "] Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : "+nomPieceCapture;
+            message = "[" + this.jeuCourant.toString() + "] Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : " + nomPieceCapture;
             return true;
         }
 
         message = "La pièce à capturer est une pièce de votre équipe";
+
         return false;
 
     }

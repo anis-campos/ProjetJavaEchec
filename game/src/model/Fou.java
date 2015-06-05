@@ -6,8 +6,6 @@
 package model;
 
 import static java.lang.Math.abs;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -25,9 +23,9 @@ public class Fou extends AbstractPiece {
     }
 
     @Override
-    protected Object clone() {
+    protected AbstractPiece clone() {
 
-        Fou clone = new Fou(name, couleur, coord);
+        Fou clone = new Fou(name, couleur, coord.clone());
         clone.capture = capture;
         return clone;
 

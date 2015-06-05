@@ -24,10 +24,10 @@ public class Roi extends AbstractPiece {
     }
 
     @Override
-    protected Object clone() {
+    protected AbstractPiece clone() {
 
         
-        Roi clone = new Roi(name, couleur, coord);
+        Roi clone = new Roi(name, couleur, coord.clone());
         clone.capture = capture;
         return clone;
         

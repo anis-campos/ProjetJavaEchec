@@ -53,11 +53,11 @@ public class Echiquier implements Cloneable {
     }
 
     @Override
-    protected Object clone() {
+    protected Echiquier clone() {
 
         Jeu jeuxClone[] = new Jeu[2];
-        for (int i = 0; i < jeuxClone.length; i++) {
-            jeuxClone[i] = (Jeu) this.jeux[i].clone();
+        for (int i = 0; i < 2; i++) {
+            jeuxClone[i] = this.jeux[i].clone();
         }
 
         Jeu jeuCourantClone = jeuCourant.getCouleur() == Couleur.BLANC ? jeuxClone[Couleur.BLANC.ordinal()] : jeuxClone[Couleur.NOIR.ordinal()];
@@ -69,9 +69,11 @@ public class Echiquier implements Cloneable {
 
     private boolean MetRoiCourantEnDanger(int xInit, int yInit, int xFinal, int yFinal) {
 
-        Echiquier MondeParallele = (Echiquier) this.clone();
+        Echiquier MondeParallele = this.clone();
         Coord roi = MondeParallele.jeuCourant.getKingCoord();
-        return MondeParallele.move_clone(xInit, yInit, xFinal, yFinal) && MondeParallele.roiEnDanger(roi);
+        System.out.println("Coord Roi : " + roi);
+        MondeParallele.move_clone(xInit, yInit, xFinal, yFinal);
+        return MondeParallele.roiEnDanger(roi);
     }
 
     private boolean move_clone(int xInit, int yInit, int xFinal, int yFinal) {
@@ -92,12 +94,20 @@ public class Echiquier implements Cloneable {
 
                 rep = jeuCourant.move(xInit, yInit, xFinal, yFinal);
 
+                if (rep) {
+                    return true;
+                }
+
             } else {
                 if (jeuCourant.getPieceType(xInit, yInit).equals("Pion") && !(Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
                     return false;
                 }
                 getAdversaire().capture(xFinal, yFinal);
                 rep = jeuCourant.move(xInit, yInit, xFinal, yFinal);
+
+                if (rep) {
+                    return true;
+                }
             }
 
         }
@@ -107,12 +117,13 @@ public class Echiquier implements Cloneable {
     public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         boolean rep = false;
 
-        if (roiEnDanger(jeuCourant.getKingCoord()) && testEchecEtMat()) {
-            echecEtMat = true;
-            message = "Jeu Terminé";
-            return false;
+        if (roiEnDanger(jeuCourant.getKingCoord())) {
+            if (testEchecEtMat()) {
+                echecEtMat = true;
+                message = "Jeu Terminé";
+                return false;
+            }
         }
-
         if (Coord.coordonnees_valides(xFinal, yFinal)
                 && !(xInit == xFinal && yInit == yFinal)
                 && jeuCourant.isPieceHere(xInit, yInit)
@@ -285,8 +296,10 @@ public class Echiquier implements Cloneable {
                 if (jeuCourant.isPieceHere(xInit, yInit)) {
                     for (int xFinal = 0; xFinal < 8; xFinal++) {
                         for (int yFinal = 0; yFinal < 8; yFinal++) {
-                            if (jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)) {
+                            if (jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
+                                    && !collisionInPath(xInit, yInit, xFinal, yFinal)) {
                                 if (!this.MetRoiCourantEnDanger(xInit, yInit, xFinal, yFinal)) {
+                                    System.out.println((xInit+1) + " " + (yInit+1) + " " + (xFinal+1) + " " + (yFinal+1));
                                     return false;
                                 }
                             }

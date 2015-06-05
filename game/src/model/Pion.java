@@ -22,29 +22,21 @@ public class Pion extends AbstractPiece implements Pions {
 
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
-        if(!(xFinal == this.getX()))
+       
+        if (!(xFinal == this.getX())) {
             return false;
-        if (depart) {
-            switch (this.couleur) {
-                case BLANC:
-                    return getY() - yFinal <= 2;
+        }
 
-                case NOIR:
-                    return yFinal - getY() <= 2;
+        int diffY = yFinal - getY();
 
-                default:
-                    return false;
-            }
-        } else {
-            switch (this.couleur) {
-                case BLANC:
-                    return (getY() - yFinal <= 1);
+        switch (this.couleur) {
+            case BLANC:
+                return diffY<0&& diffY >= (depart ? -2 : -1);
 
-                case NOIR:
-                    return (yFinal - getY() <= 1) ;
-                default:
-                    return false;
-            }
+            case NOIR:
+                return diffY>0&&diffY <= (depart ? 2 : 1);
+            default:
+                return false;
         }
 
     }
@@ -52,29 +44,26 @@ public class Pion extends AbstractPiece implements Pions {
     @Override
     public boolean isMoveDiagOk(int xFinal, int yFinal) {
 
-        if(abs(getX()-xFinal)!=1)
+        if (abs(getX() - xFinal) != 1) {
             return false;
+        }
         switch (this.couleur) {
-                case BLANC:
-                    return (getY() - yFinal == 1);
+            case BLANC:
+                return (getY() - yFinal == 1);
 
-                case NOIR:
-                    return (yFinal - getY() == 1) ;
-                default:
-                    return false;
-            }
+            case NOIR:
+                return (yFinal - getY() == 1);
+            default:
+                return false;
+        }
     }
 
     @Override
-    protected Object clone() {
+    protected AbstractPiece clone() {
 
-        
-        Pion clone = new Pion(name, couleur, coord);
+        Pion clone = new Pion(name, couleur, coord.clone());
         clone.capture = capture;
         return clone;
     }
-
-
-  
 
 }

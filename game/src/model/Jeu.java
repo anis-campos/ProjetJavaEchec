@@ -5,7 +5,6 @@
  */
 package model;
 
-import java.net.CookieHandler;
 import java.util.LinkedList;
 import java.util.List;
 import tools.ChessPieceFactory;
@@ -16,8 +15,8 @@ import tools.ChessPieceFactory;
  */
 public class Jeu implements Cloneable {
 
-    private Couleur couleur;
-    private List<Pieces> listPieces;
+    private final Couleur couleur;
+    private final List<Pieces> listPieces;
 
     private static final int NB_PIECES = 16;
 
@@ -32,12 +31,12 @@ public class Jeu implements Cloneable {
     }
 
     @Override
-    protected Object clone()  {
+    protected Jeu clone()  {
         
         List<Pieces> listeClone = new LinkedList<>();
         
         for (Pieces piece : listPieces) {
-            listeClone.add((Pieces)((AbstractPiece)piece).clone());
+            listeClone.add(((AbstractPiece)piece).clone());
         }
         
         Jeu clone = new Jeu(this.getCouleur(),listeClone);
@@ -86,7 +85,7 @@ public class Jeu implements Cloneable {
         
         if(roiPotentiel != null && tourPotentiel != null){
             if(roiPotentiel instanceof Roi && tourPotentiel instanceof Tour){
-                if(((Roi)roiPotentiel).depart && ((Tour)tourPotentiel).depart 
+                if(((AbstractPiece)roiPotentiel).depart && ((AbstractPiece)tourPotentiel).depart 
                         && tourPotentiel.getName().contains("To2"))
                     return true;
             }
@@ -101,7 +100,7 @@ public class Jeu implements Cloneable {
         
         if(roiPotentiel != null && tourPotentiel != null){
             if(roiPotentiel instanceof Roi && tourPotentiel instanceof Tour){
-                if(((Roi)roiPotentiel).depart && ((Tour)tourPotentiel).depart 
+                if(((AbstractPiece)roiPotentiel).depart && ((AbstractPiece)tourPotentiel).depart 
                         && tourPotentiel.getName().contains("To1"))
                     return true;
             }
@@ -124,7 +123,7 @@ public class Jeu implements Cloneable {
         Coord rep =null ;
         for(Pieces piece: listPieces){
             if (piece instanceof Roi)
-                rep = ((Roi)piece).coord;
+                rep = ((AbstractPiece)piece).coord;
         }
         return rep;
     }
@@ -182,21 +181,11 @@ public class Jeu implements Cloneable {
     }
 
     private Pieces findPiece(int x, int y) {
-        boolean find = false;
-        int i = 0;
-
-        while (i < listPieces.size() && !find) {
-            if (!listPieces.get(i).getCapture()&&(listPieces.get(i).getX() == x && listPieces.get(i).getY() == y)) {
-                find = true;
-            } else {
-                i++;
-            }
+        for(Pieces piece : listPieces){
+            if(!piece.getCapture()&&(piece.getX()==x&&piece.getY()==y))
+                return piece;
         }
-        if (i < listPieces.size()) {
-            return listPieces.get(i);
-        } else {
-            return null;
-        }
+        return null;
     }
     
     public boolean promote(int x, int y, String newType){

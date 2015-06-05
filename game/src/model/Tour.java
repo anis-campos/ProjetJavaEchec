@@ -6,8 +6,6 @@
 package model;
 
 import static java.lang.Math.abs;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -28,9 +26,9 @@ public class Tour extends AbstractPiece {
     }
 
     @Override
-    protected Object clone() {
+    protected AbstractPiece clone() {
         
-        Tour clone = new Tour(name, couleur, coord);
+        Tour clone = new Tour(name, couleur, coord.clone());
         clone.capture = capture;
         return clone;
     }

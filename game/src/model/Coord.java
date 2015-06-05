@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author francoise.perrin
  *
  */
-public class Coord implements Serializable, Comparable {
+public class Coord implements Serializable, Comparable, Cloneable {
 	
 	public int x, y;
 	
@@ -52,6 +52,13 @@ public class Coord implements Serializable, Comparable {
         public int numeroCase(){
             return this.y*8 + this.x + 1;
         }
+
+    @Override
+    protected Coord clone()  {
+        return new Coord(x, y);
+    }
+        
+        
 
     @Override
     public int hashCode() {

@@ -1,8 +1,6 @@
 package model;
 
 import static java.lang.Math.abs;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -22,9 +20,9 @@ public class Cavalier extends AbstractPiece {
     }
 
     @Override
-    protected Object clone() {
+    protected AbstractPiece clone() {
 
-        Cavalier clone = new Cavalier(name, couleur, coord);
+        Cavalier clone = new Cavalier(name, couleur, coord.clone());
         clone.capture = capture;
         return clone;
         

@@ -25,14 +25,14 @@ public abstract class AbstractPiece implements Pieces, Cloneable {
     public AbstractPiece(String name, Couleur couleur, Coord coord) {
         this.name = name;
         this.couleur = couleur;
-        this.coord = new Coord(coord.x,coord.y);
+        this.coord = coord;
         this.capture = false;
         this.depart = true;
     }
 
    
     @Override
-    abstract protected Object clone();
+    abstract protected AbstractPiece clone();
     
 
     @Override

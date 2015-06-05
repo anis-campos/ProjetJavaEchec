@@ -4,7 +4,6 @@ package controller.controllerLocal;
 import model.Coord;
 import model.observable.ChessGame;
 import controller.AbstractChessGameControler;
-import controller.AbstractChessGameControler;
 
 
 /**

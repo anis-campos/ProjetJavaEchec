@@ -21,4 +21,13 @@ public class Cavalier extends AbstractPiece {
 
     }
 
+    @Override
+    protected Object clone() {
+
+        Cavalier clone = new Cavalier(name, couleur, coord);
+        clone.capture = capture;
+        return clone;
+        
+    }
+
 }

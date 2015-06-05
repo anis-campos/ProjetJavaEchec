@@ -24,5 +24,13 @@ public class Fou extends AbstractPiece {
         return abs(xFinal - getX()) == abs(yFinal - getY());
     }
 
-    
+    @Override
+    protected Object clone() {
+
+        Fou clone = new Fou(name, couleur, coord);
+        clone.capture = capture;
+        return clone;
+
+    }
+
 }

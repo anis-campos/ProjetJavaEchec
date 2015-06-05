@@ -27,4 +27,12 @@ public class Reine extends AbstractPiece {
                 || (abs(xFinal - getX()) > 0 && abs(getY() - yFinal) == 0);
     }
 
+    @Override
+    protected Object clone() {
+
+        Fou clone = new Fou(name, couleur, coord);
+        clone.capture = capture;
+        return clone;
+    }
+
 }

@@ -23,4 +23,16 @@ public class Roi extends AbstractPiece {
         return abs(getX() - xFinal) <= 1 && abs(yFinal - getY()) <= 1;
     }
 
+    @Override
+    protected Object clone() {
+
+        
+        Roi clone = new Roi(name, couleur, coord);
+        clone.capture = capture;
+        return clone;
+        
+    }
+
+    
+    
 }

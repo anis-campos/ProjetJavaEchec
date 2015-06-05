@@ -358,11 +358,21 @@ public class Echiquier implements Cloneable {
     }
     
     public boolean littleRoque(int xInit, int yInit, int xFinal, int yFinal){
-        return this.jeuCourant.littleRoque(xInit, yInit, xFinal, yFinal);
+        boolean ret = this.jeuCourant.littleRoque(xInit, yInit, xFinal, yFinal);
+        if(ret)
+            message = "Petit roque !";
+        else
+            message = "Erreur dans le petit roque.";
+        return ret;
     }
     
     public boolean bigRoque(int xInit, int yInit, int xFinal, int yFinal){
-        return this.jeuCourant.bigRoque(xInit, yInit, xFinal, yFinal);
+        boolean ret = this.jeuCourant.bigRoque(xInit, yInit, xFinal, yFinal);
+        if(ret)
+            message = "Grand roque !";
+        else
+            message = "Erreur dans le grand roque.";
+        return ret;        
     }
 
 }

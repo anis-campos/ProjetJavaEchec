@@ -32,7 +32,7 @@ public class Jeu implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected Object clone()  {
         
         List<Pieces> listeClone = new LinkedList<>();
         

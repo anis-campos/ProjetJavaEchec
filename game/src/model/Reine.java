@@ -30,7 +30,7 @@ public class Reine extends AbstractPiece {
     @Override
     protected Object clone() {
 
-        Fou clone = new Fou(name, couleur, coord);
+        Reine clone = new Reine(name, couleur, coord);
         clone.capture = capture;
         return clone;
     }

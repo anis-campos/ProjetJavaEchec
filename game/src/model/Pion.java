@@ -13,8 +13,11 @@ import static java.lang.Math.abs;
  */
 public class Pion extends AbstractPiece implements Pions {
 
+    boolean depart;
+
     public Pion(String name, Couleur couleur, Coord coord) {
         super(name, couleur, coord);
+        this.depart = true;
     }
 
     @Override
@@ -63,8 +66,10 @@ public class Pion extends AbstractPiece implements Pions {
     }
 
     @Override
-    protected Object clone() {        
-        Fou clone = new Fou(name, couleur, coord);
+    protected Object clone() {
+
+        
+        Pion clone = new Pion(name, couleur, coord);
         clone.capture = capture;
         return clone;
     }

@@ -413,7 +413,8 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 pieceToMove.setVisible(false);
                 
                 if(roqueMade){
-                    pieceToRoqueSquare = this.tab2DJPanel[(Integer) args[9]][(Integer) args[10]];
+                    System.out.println((int)args[8]+" " + (int)args[9]);
+                    pieceToRoqueSquare = this.tab2DJPanel[(Integer) args[8]][(Integer) args[9]];
                     pieceToRoque = (JLabel) pieceToRoqueSquare.getComponent(0);
                 }
                     
@@ -443,7 +444,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                         }
                         
                         if(roqueMade){
-                            targetRoqueSquare = this.tab2DJPanel[(Integer) args[11]][(Integer) args[12]];
+                            targetRoqueSquare = this.tab2DJPanel[(Integer) args[10]][(Integer) args[11]];
                             targetRoqueSquare.add(pieceToRoque);
                         }
                         

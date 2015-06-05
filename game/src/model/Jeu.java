@@ -83,6 +83,7 @@ public class Jeu implements Cloneable {
         Pieces roiPotentiel = findPiece(xInit, yInit);
         Pieces tourPotentiel = findPiece(xFinal + 1, yFinal);
         
+        
         if(roiPotentiel != null && tourPotentiel != null){
             if(roiPotentiel instanceof Roi && tourPotentiel instanceof Tour){
                 if(((Roi)roiPotentiel).depart && ((Tour)tourPotentiel).depart 

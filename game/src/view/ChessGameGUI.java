@@ -413,9 +413,9 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 pieceToMove.setVisible(false);
                 
                 if(roqueMade){
-                    System.out.println((int)args[8]+" " + (int)args[9]);
                     pieceToRoqueSquare = this.tab2DJPanel[(Integer) args[8]][(Integer) args[9]];
                     pieceToRoque = (JLabel) pieceToRoqueSquare.getComponent(0);
+                    pieceToRoque.setVisible(false);
                 }
                     
                 if (isMoveOk || promotion){
@@ -450,7 +450,9 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                         
                         
                 }
-
+                
+                if(roqueMade)
+                    pieceToRoque.setVisible(true);
                 pieceToMove.setVisible(true);
 
                 if(isPionToPromote){

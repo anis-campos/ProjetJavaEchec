@@ -134,7 +134,6 @@ public class Echiquier implements Cloneable {
                     message = "votre roi est en échec";
                     return false;
                 }
-
             } else {
                 //testEchecEtMat(RoiCourant);
                 //PAT A GERER
@@ -295,7 +294,7 @@ public class Echiquier implements Cloneable {
 
     private boolean testEchecEtMat(Coord roi) {
 
-        //Tester les deplacemnt du roi
+       /* //Tester les deplacemnt du roi
         int X[] = {-1, 0, 1};
         int Y[] = {-1, 0, 1};
         for (int x : X) {
@@ -322,7 +321,9 @@ public class Echiquier implements Cloneable {
         }
         
         //Tous les déplacement on été testés, le roi est foutu !!!!
-        return true;
+        return true;*/
+        
+        return false;
     }
 
     public boolean isPionToPromote(int x, int y) {
@@ -340,7 +341,7 @@ public class Echiquier implements Cloneable {
     public boolean isALittleRoque(int xInit, int yInit, int xFinal, int yFinal){
         if(!jeuCourant.isALittleRoque(xInit, yInit, xFinal, yFinal))
             return false;
-        else if(collisionInPath(xInit, yInit, xFinal, yFinal - 1))
+        else if(collisionInPath(xInit, yInit, xFinal, yFinal))
             return false;
         else
             return true;

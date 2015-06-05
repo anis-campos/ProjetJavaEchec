@@ -61,13 +61,13 @@ public class ChessGame extends Observable{
                 int yFinalRoque = yFinal;
                 
                 if(this.echiquier.isABigRoque(xInit, yInit, xFinal, yFinal)){
-                    this.echiquier.bigRoque(xInit, yInit, xFinal, yFinal);
+                    ret = this.echiquier.bigRoque(xInit, yInit, xFinal, yFinal);
                     roqueMade = true;
                     xInitRoque = 0;
-                    xFinalRoque = 4;
+                    xFinalRoque = 3;
                 }                
                 else if(this.echiquier.isALittleRoque(xInit, yInit, xFinal, yFinal)){
-                    this.echiquier.littleRoque(xInit, yInit, xFinal, yFinal);
+                    ret = this.echiquier.littleRoque(xInit, yInit, xFinal, yFinal);
                     roqueMade = true;
                     xInitRoque = 7;
                     xFinalRoque = 5;

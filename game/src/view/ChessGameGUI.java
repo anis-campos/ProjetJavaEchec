@@ -391,25 +391,36 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 boolean promotion = false;
                 boolean isMoveOk = false;
                 boolean isPionToPromote = false;
+                boolean roqueMade = false;
+                JPanel pieceToRoqueSquare = null;
+                JLabel pieceToRoque = null;
                 
                 if(args.length == 4)
                     promotion = true;
                 else{
                     isMoveOk = (Boolean) args[4];
                     isPionToPromote = (Boolean) args[5];
+                    roqueMade = (Boolean) args[7];
                 }
                 // carr� de destination
                 JPanel targetSquare;
-
+                // carre initial
+                JPanel targetRoqueSquare = null;
+                                
                 pieceToMoveSquare = this.tab2DJPanel[(Integer) args[0]][(Integer) args[1]];
                 pieceToMove = (JLabel) pieceToMoveSquare.getComponent(0);	
 
                 pieceToMove.setVisible(false);
-
+                
+                if(roqueMade){
+                    pieceToRoqueSquare = this.tab2DJPanel[(Integer) args[9]][(Integer) args[10]];
+                    pieceToRoque = (JLabel) pieceToRoqueSquare.getComponent(0);
+                }
+                    
                 if (isMoveOk || promotion){
-                        if(isMoveOk)
+                        if(isMoveOk){
                             targetSquare = this.tab2DJPanel[(Integer) args[2]][(Integer) args[3]];
-                        else{
+                        }else{
                             targetSquare = this.tab2DJPanel[(Integer) args[0]][(Integer) args[1]];
                         
                             String type = (String) args[2];
@@ -417,7 +428,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                             JLabel newImage = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(type, couleur)));
                             pieceToMove = newImage;
                         }
-
+                        
                         // s'il existe une pi�ce � prendre
                         try {
                                 targetSquare.getComponent(0);
@@ -430,6 +441,12 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                                 // rendre effectif le d�placement de la pi�ce
                                 targetSquare.add( pieceToMove );	
                         }
+                        
+                        if(roqueMade){
+                            targetRoqueSquare = this.tab2DJPanel[(Integer) args[11]][(Integer) args[12]];
+                            targetRoqueSquare.add(pieceToRoque);
+                        }
+                        
                         
                 }
 
@@ -449,7 +466,6 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
                     this.chessGameControler.promote(new Coord((int)args[2], (int)args[3]), s);
                 }
-
 
                 this.messageTextBox.addMessage(this.chessGameControler.getMessage());
                 this.messageBox.setText(this.messageTextBox.getMesageBox());

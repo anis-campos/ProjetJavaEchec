@@ -48,7 +48,7 @@ public class Jeu implements Cloneable {
 
     
     
-    public boolean Move(int xInit, int yInit, int xFinal, int yFinal) {
+    public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         Pieces piece = findPiece(xInit, yInit);
         if (piece != null) {
             return piece.move(xFinal, yFinal);
@@ -79,6 +79,49 @@ public class Jeu implements Cloneable {
         }
     }
     
+    public boolean isALittleRoque(int xInit, int yInit, int xFinal, int yFinal){
+        Pieces roiPotentiel = findPiece(xInit, yInit);
+        Pieces tourPotentiel = findPiece(xFinal + 1, yFinal);
+        
+        if(roiPotentiel != null && tourPotentiel != null){
+            if(roiPotentiel instanceof Roi && tourPotentiel instanceof Tour){
+                if(((Roi)roiPotentiel).depart && ((Tour)tourPotentiel).depart 
+                        && tourPotentiel.getName().contains("To2"))
+                    return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean isABigRoque(int xInit, int yInit, int xFinal, int yFinal){
+        Pieces roiPotentiel = findPiece(xInit, yInit);
+        Pieces tourPotentiel = findPiece(xFinal - 2, yFinal);
+        
+        System.out.println(roiPotentiel instanceof Roi);
+        System.out.println(tourPotentiel instanceof Tour);
+        
+        if(roiPotentiel != null && tourPotentiel != null){
+            if(roiPotentiel instanceof Roi && tourPotentiel instanceof Tour){
+                if(((Roi)roiPotentiel).depart && ((Tour)tourPotentiel).depart 
+                        && tourPotentiel.getName().contains("To1"))
+                    return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean littleRoque(int xInit, int yInit, int xFinal, int yFinal){
+        return move(xFinal + 1, yFinal, xInit + 1, yInit) && 
+               move(xInit, yInit, xFinal, yFinal);
+    }
+    
+    public boolean bigRoque(int xInit, int yInit, int xFinal, int yFinal){
+        return move(xFinal - 2, yFinal, xInit - 1, yInit) && 
+               move(xInit, yInit, xFinal, yFinal);
+    }
+    
     public Coord getKingCoord(){
         Coord rep =null ;
         for(Pieces piece: listPieces){
@@ -87,7 +130,7 @@ public class Jeu implements Cloneable {
         }
         return rep;
     }
-
+    
     public boolean isPieceToMoveHere(int x, int y) {
         return isPieceHere(x, y);
     }
@@ -135,7 +178,6 @@ public class Jeu implements Cloneable {
             return piece.getClass().getSimpleName();
         }
     }
-
 
     public Couleur getCouleur() {
         return this.couleur;

@@ -53,7 +53,26 @@ public class ChessGame extends Observable{
 	public boolean move (int xInit, int yInit, int xFinal, int yFinal){
 		boolean ret = false;
                 boolean pionPromoted = false;
-		if (!echiquier.isEchecEtMat()) {
+                boolean roqueMade = false;
+                
+                int xInitRoque = 0;
+                int xFinalRoque = 0;
+                int yInitRoque = yInit;
+                int yFinalRoque = yFinal;
+                
+                if(this.echiquier.isABigRoque(xInit, yInit, xFinal, yFinal)){
+                    this.echiquier.bigRoque(xInit, yInit, xFinal, yFinal);
+                    roqueMade = true;
+                    xInitRoque = 0;
+                    xFinalRoque = 4;
+                }                
+                else if(this.echiquier.isALittleRoque(xInit, yInit, xFinal, yFinal)){
+                    this.echiquier.littleRoque(xInit, yInit, xFinal, yFinal);
+                    roqueMade = true;
+                    xInitRoque = 7;
+                    xFinalRoque = 5;
+                }
+                else if (!echiquier.isEchecEtMat()) {
 			ret = echiquier.move(xInit, yInit, xFinal, yFinal);
                         if(ret)
                             pionPromoted = echiquier.isPionToPromote(xFinal, yFinal);
@@ -63,7 +82,8 @@ public class ChessGame extends Observable{
 		}
 		this.setChanged();
                 
-		this.notifyObservers(new Object[]{xInit, yInit, xFinal, yFinal, ret, pionPromoted, getColorCurrentPlayer()});
+		this.notifyObservers(new Object[]{xInit, yInit, xFinal, yFinal, ret, pionPromoted, getColorCurrentPlayer(), roqueMade, xInitRoque, yInitRoque,
+                    xFinalRoque, yFinalRoque});
 		return ret;	
 	}
         

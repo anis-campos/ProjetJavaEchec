@@ -18,7 +18,8 @@ public abstract class AbstractPiece implements Pieces, Cloneable {
     protected String name;
     protected final Couleur couleur;
     protected Coord coord;
-
+    protected boolean depart;
+    
     protected boolean capture;
 
     public AbstractPiece(String name, Couleur couleur, Coord coord) {
@@ -26,6 +27,7 @@ public abstract class AbstractPiece implements Pieces, Cloneable {
         this.couleur = couleur;
         this.coord = coord;
         this.capture = false;
+        this.depart = true;
     }
 
    
@@ -37,6 +39,7 @@ public abstract class AbstractPiece implements Pieces, Cloneable {
     public boolean move(int xFinal, int yFinal) {
         this.coord.x = xFinal;
         this.coord.y = yFinal;
+        this.depart = false;
         return true;
     }
 

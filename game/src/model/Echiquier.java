@@ -129,7 +129,7 @@ public class Echiquier implements Cloneable {
             }
 
             //Deplacement simple;
-            if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal)) {
+            if (rep = jeuCourant.move(xInit, yInit, xFinal, yFinal)) {
                 this.message += "\n -> déplacement terminé";
                 testEchecEtMat(RoiAdversaire);
             } else {
@@ -282,6 +282,33 @@ public class Echiquier implements Cloneable {
 
     public boolean promote(int x, int y, String newType) {
         return this.jeuCourant.promote(x, y, newType);
+    }
+    
+    public boolean isALittleRoque(int xInit, int yInit, int xFinal, int yFinal){
+        if(!jeuCourant.isALittleRoque(xInit, yInit, xFinal, yFinal))
+            return false;
+        else if(collisionInPath(xInit, yInit, xFinal, yFinal - 1))
+            return false;
+        else
+            return true;
+    }
+    
+    public boolean isABigRoque(int xInit, int yInit, int xFinal, int yFinal){
+        
+        if(!jeuCourant.isABigRoque(xInit, yInit, xFinal, yFinal))
+            return false;
+        else if(collisionInPath(xInit, yInit, xFinal, yFinal))
+            return false;
+        else
+            return true;
+    }
+    
+    public boolean littleRoque(int xInit, int yInit, int xFinal, int yFinal){
+        return this.jeuCourant.littleRoque(xInit, yInit, xFinal, yFinal);
+    }
+    
+    public boolean bigRoque(int xInit, int yInit, int xFinal, int yFinal){
+        return this.jeuCourant.bigRoque(xInit, yInit, xFinal, yFinal);
     }
 
 }

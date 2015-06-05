@@ -69,14 +69,16 @@ public class ChessGame extends Observable{
         
         public boolean promote(int x, int y, String newType){
             boolean ret = false;
+            Couleur couleur = null;
 		if (!echiquier.isEchecEtMat()) {
 			ret = echiquier.promote(x, y, newType);
 		}
 		if (ret){
+                        couleur = getColorCurrentPlayer();
 			echiquier.switchJoueur();
 		}
 		this.setChanged();
-		this.notifyObservers(new Object[]{x, y});
+		this.notifyObservers(new Object[]{x, y, newType, couleur});
 		return ret;
         }
 

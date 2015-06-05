@@ -392,7 +392,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 boolean isMoveOk = false;
                 boolean isPionToPromote = false;
                 
-                if(args.length == 2)
+                if(args.length == 4)
                     promotion = true;
                 else{
                     isMoveOk = (Boolean) args[4];
@@ -409,8 +409,15 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 if (isMoveOk || promotion){
                         if(isMoveOk)
                             targetSquare = this.tab2DJPanel[(Integer) args[2]][(Integer) args[3]];
-                        else
+                        else{
                             targetSquare = this.tab2DJPanel[(Integer) args[0]][(Integer) args[1]];
+                        
+                            String type = (String) args[2];
+                            Couleur couleur = (Couleur) args[3];
+                            JLabel newImage = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(type, couleur)));
+                            pieceToMove = newImage;
+                        }
+
                         // s'il existe une pi�ce � prendre
                         try {
                                 targetSquare.getComponent(0);
@@ -423,6 +430,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                                 // rendre effectif le d�placement de la pi�ce
                                 targetSquare.add( pieceToMove );	
                         }
+                        
                 }
 
                 pieceToMove.setVisible(true);

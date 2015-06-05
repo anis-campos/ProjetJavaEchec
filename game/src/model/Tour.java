@@ -27,5 +27,14 @@ public class Tour extends AbstractPiece {
                 && abs(getY() - yFinal) == 0);
     }
 
+    @Override
+    protected Object clone() {
+        
+        Tour clone = new Tour(name, couleur, coord);
+        clone.capture = capture;
+        return clone;
+    }
+
+    
     
 }

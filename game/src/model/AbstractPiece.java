@@ -13,13 +13,13 @@ import java.util.List;
  *
  * @author Antoine
  */
-public abstract class AbstractPiece implements Pieces {
+public abstract class AbstractPiece implements Pieces, Cloneable {
 
     protected String name;
     protected final Couleur couleur;
     protected Coord coord;
 
-    private boolean capture;
+    protected boolean capture;
 
     public AbstractPiece(String name, Couleur couleur, Coord coord) {
         this.name = name;
@@ -27,6 +27,11 @@ public abstract class AbstractPiece implements Pieces {
         this.coord = coord;
         this.capture = false;
     }
+
+   
+    @Override
+    abstract protected Object clone();
+    
 
     @Override
     public boolean move(int xFinal, int yFinal) {

@@ -70,6 +70,15 @@ public class Pion extends AbstractPiece implements Pions {
             }
     }
 
+    @Override
+    protected Object clone() {
+
+        
+        Fou clone = new Fou(name, couleur, coord);
+        clone.capture = capture;
+        return clone;
+    }
+
 
   
 

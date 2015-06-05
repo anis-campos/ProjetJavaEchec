@@ -9,7 +9,7 @@ package model;
  *
  * @author Antoine
  */
-public class Echiquier {
+public class Echiquier implements Cloneable {
 
     private Jeu jeux[];
     private Jeu jeuCourant;
@@ -36,6 +36,14 @@ public class Echiquier {
          }*/
     }
 
+    private Echiquier(Jeu jeux[], Jeu jeuCourant, String message, boolean echecEtMat) {
+        this.jeux = jeux;
+        this. jeuCourant = jeuCourant;
+        this.message = message;
+        this.echecEtMat = echecEtMat;
+                
+    }
+
     public String getMessage() {
         return message;
     }
@@ -44,36 +52,83 @@ public class Echiquier {
         return echecEtMat;
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        
+        Jeu jeuxClone[] = new Jeu[2];
+        for (int i = 0; i< jeuxClone.length; i++) {
+           jeuxClone[i] = (Jeu) this.jeux[i].clone();
+        }
+        
+        Jeu jeuCourantClone = jeuCourant.getCouleur()==Couleur.BLANC?jeuxClone[Couleur.BLANC.ordinal()]:jeuxClone[Couleur.NOIR.ordinal()];
+        
+        Echiquier clone = new Echiquier(jeuxClone, jeuCourantClone, message, echecEtMat);
+        
+        return clone;
+    }
+
     public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         boolean rep = false;
+
+        Coord RoiCourant = jeuCourant.getKingCoord();
+        Coord RoiAdversaire = getAdversaire().getKingCoord();
+
+        boolean JeuCourantIsEchec = roiEnDanger(RoiCourant.x, RoiCourant.y);
+
+        if (roiEnDanger(RoiCourant.x, RoiCourant.y)) {
+            testEchecEtMat(RoiCourant);
+        }
 
         if (Coord.coordonnees_valides(xFinal, yFinal)
                 && !(xInit == xFinal && yInit == yFinal)
                 && jeuCourant.isPieceHere(xInit, yInit)
-                && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)) {
+                && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
+                && !collisionInPath(xInit, yInit, xFinal, yFinal)) {
 
-            /*if (jeuCourant.getPieceType(xInit, yInit).equals("Roi")) {
-                if (roiEnDanger(xFinal, yFinal)) {
-                    return false;
+            //Gestiion déplacement du roi.
+            if (jeuCourant.getPieceType(xInit, yInit).equals("Roi") && roiEnDanger(xFinal, yFinal)) {
+
+                //gestion d'un déplacement interdit du roi
+                return false;
+            } else if (jeuCourant.getPieceType(xInit, yInit).equals("Roi")) {
+                if (JeuCourantIsEchec) {
+                    if (isPieceHereAllGames(xInit, yInit)) {
+                        if (captureManager(xInit, yInit, xFinal, yFinal)) //Il capture une pièce et n'est plus en danger
+                        {
+                            JeuCourantIsEchec = false;
+                        }
+                    } else {
+                        //il se sauve en se déplacant
+                        JeuCourantIsEchec = false;
+                    }
                 }
+            } else if (roiEnDanger(xFinal, yFinal)) {
+                if (isPieceHereAllGames(xInit, yInit)) {
+                    if (captureManager(xInit, yInit, xFinal, yFinal)) {
+                        //CLONNNEEERRERER.
+                    }
+                }
+            }
+
+            //Gestion déplacement des autre pièces
+            //Deplacement et Capture
+            if (isPieceHereAllGames(xInit, yInit) && captureManager(xInit, yInit, xFinal, yFinal)) {
+                getAdversaire().capture(xFinal, yFinal);
+                String nomPieceCapture = getAdversaire().getPieceName(xFinal, yFinal);
+                message = "[" + this.jeuCourant.toString() + "] Deplacement avec  Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : " + nomPieceCapture;
+
             } else {
-                
+                message = "Deplacment simple";
             }
 
-            if (collisionInPath(xInit, yInit, xFinal, yFinal)) {
-
-            }
-
-            if (collisionInPath(xInit, yInit, xFinal, yFinal)) {
-
-            }*/
-
+            //Deplacement simple;
             if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal)) {
                 this.message += "\n -> déplacement terminé";
-                testEchecEtMat();
+                testEchecEtMat(RoiAdversaire);
             } else {
                 this.message += "\n -> il y a eu un problème dans le déplacement";
             }
+
         } else {
             message = "Il y a une/plusieurs erreur : ";
             if (!Coord.coordonnees_valides(xFinal, yFinal)) {
@@ -159,9 +214,6 @@ public class Echiquier {
                 message = "deplacement interdit";
                 return false;
             }
-            getAdversaire().capture(xFinal, yFinal);
-            String nomPieceCapture = getAdversaire().getPieceName(xFinal, yFinal);
-            message = "[" + this.jeuCourant.toString() + "] Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : " + nomPieceCapture;
             return true;
         }
 
@@ -200,7 +252,7 @@ public class Echiquier {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 if (getAdversaire().isPieceHere(x, y)) {
-                    if (getAdversaire().isMoveOk(x, y, xFinal, yFinal) && !collisionInPath(x, y, xFinal, yFinal)) {
+                    if (getAdversaire().isMoveOk(x, y, xFinal, yFinal) && !collisionInPath(x, y, xFinal, yFinal) && captureManager(x, y, xFinal, yFinal)) {
                         message = "La pièce " + getAdversaire().getPieceName(x, y) + " " + new Coord(x, y) + " menace le roi";
                         return true;
                     }
@@ -210,7 +262,8 @@ public class Echiquier {
         return false;
     }
 
-    private void testEchecEtMat() {
+    private void testEchecEtMat(Coord roi) {
+
     }
 
     public boolean isPionToPromote(int x, int y) {

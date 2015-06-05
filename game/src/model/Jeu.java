@@ -6,6 +6,7 @@
 package model;
 
 import java.net.CookieHandler;
+import java.util.LinkedList;
 import java.util.List;
 import tools.ChessPieceFactory;
 
@@ -13,7 +14,7 @@ import tools.ChessPieceFactory;
  *
  * @author Antoine
  */
-public class Jeu {
+public class Jeu implements Cloneable {
 
     private Couleur couleur;
     private List<Pieces> listPieces;
@@ -24,7 +25,29 @@ public class Jeu {
         this.couleur = couleur;
         this.listPieces = ChessPieceFactory.newPieces(couleur);
     }
+    
+    private Jeu (Couleur coul, List<Pieces> liste){
+        this.couleur = coul;
+        this.listPieces = liste;
+    }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        
+        List<Pieces> listeClone = new LinkedList<>();
+        
+        for (Pieces piece : listPieces) {
+            listeClone.add((Pieces)((AbstractPiece)piece).clone());
+        }
+        
+        Jeu clone = new Jeu(this.getCouleur(),listeClone);
+        
+        return clone;
+        
+    }
+
+    
+    
     public boolean Move(int xInit, int yInit, int xFinal, int yFinal) {
         Pieces piece = findPiece(xInit, yInit);
         if (piece != null) {
@@ -54,6 +77,15 @@ public class Jeu {
         } else {
             return false;
         }
+    }
+    
+    public Coord getKingCoord(){
+        Coord rep =null ;
+        for(Pieces piece: listPieces){
+            if (piece instanceof Roi)
+                rep = ((Roi)piece).coord;
+        }
+        return rep;
     }
 
     public boolean isPieceToMoveHere(int x, int y) {

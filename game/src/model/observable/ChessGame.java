@@ -76,7 +76,7 @@ public class ChessGame extends Observable{
 			echiquier.switchJoueur();
 		}
 		this.setChanged();
-		this.notifyObservers(new Object[]{x, y});
+		this.notifyObservers(new Object[]{x, y, newType});
 		return ret;
         }
 

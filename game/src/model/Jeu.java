@@ -114,7 +114,7 @@ public class Jeu {
         int i = 0;
 
         while (i < listPieces.size() && !find) {
-            if (listPieces.get(i).getCapture()&&(listPieces.get(i).getX() == x && listPieces.get(i).getY() == y)) {
+            if (!listPieces.get(i).getCapture()&&(listPieces.get(i).getX() == x && listPieces.get(i).getY() == y)) {
                 find = true;
             } else {
                 i++;

@@ -52,7 +52,7 @@ public class Echiquier {
                 && jeuCourant.isPieceHere(xInit, yInit)
                 && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)) {
 
-            if (jeuCourant.getPieceType(xInit, yInit).equals("Roi")) {
+            /*if (jeuCourant.getPieceType(xInit, yInit).equals("Roi")) {
                 if (roiEnDanger(xFinal, yFinal)) {
                     return false;
                 }
@@ -66,7 +66,7 @@ public class Echiquier {
 
             if (collisionInPath(xInit, yInit, xFinal, yFinal)) {
 
-            }
+            }*/
 
             if (rep = jeuCourant.Move(xInit, yInit, xFinal, yFinal)) {
                 this.message += "\n -> déplacement terminé";
@@ -211,7 +211,6 @@ public class Echiquier {
     }
 
     private void testEchecEtMat() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public boolean isPionToPromote(int x, int y) {

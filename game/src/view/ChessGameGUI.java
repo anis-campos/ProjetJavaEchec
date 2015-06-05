@@ -409,8 +409,12 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 if (isMoveOk || promotion){
                         if(isMoveOk)
                             targetSquare = this.tab2DJPanel[(Integer) args[2]][(Integer) args[3]];
-                        else
+                        else{
+                            //String type = ChessImageProvider.getType(i, j);
+                            //Couleur couleur = ChessImageProvider.getCouleur(i, j);
+                            //this.tab2DJPanel[(Integer) args[0]][(Integer) args[1]] = (JPanel) new JPanel().add(new JLabel(new ImageIcon(ChessImageProvider.getImageFile(type, couleur))));
                             targetSquare = this.tab2DJPanel[(Integer) args[0]][(Integer) args[1]];
+                        }
                         // s'il existe une pi�ce � prendre
                         try {
                                 targetSquare.getComponent(0);

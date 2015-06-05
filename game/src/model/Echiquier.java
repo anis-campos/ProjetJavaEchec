@@ -11,7 +11,7 @@ package model;
  */
 public class Echiquier implements Cloneable {
 
-    private Jeu jeux[];
+    private final Jeu jeux[];
     private Jeu jeuCourant;
 
     private String message;
@@ -107,12 +107,12 @@ public class Echiquier implements Cloneable {
     public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         boolean rep = false;
 
-        if(roiEnDanger(jeuCourant.getKingCoord())&&testEchecEtMat()){
+        if (roiEnDanger(jeuCourant.getKingCoord()) && testEchecEtMat()) {
             echecEtMat = true;
             message = "Jeu Terminé";
             return false;
         }
-        
+
         if (Coord.coordonnees_valides(xFinal, yFinal)
                 && !(xInit == xFinal && yInit == yFinal)
                 && jeuCourant.isPieceHere(xInit, yInit)
@@ -272,7 +272,7 @@ public class Echiquier implements Cloneable {
         int Y[] = {-1, 0, 1};
         for (int x : X) {
             for (int y : Y) {
-                if (jeuCourant.isMoveOk(roi.x, roi.y, x, y)&&!this.roiEnDanger(new Coord(roi.x + x, roi.y + y))) {
+                if (jeuCourant.isMoveOk(roi.x, roi.y, x, y) && !this.roiEnDanger(new Coord(roi.x + x, roi.y + y))) {
                     return false;
                 }
             }
@@ -285,8 +285,10 @@ public class Echiquier implements Cloneable {
                 if (jeuCourant.isPieceHere(xInit, yInit)) {
                     for (int xFinal = 0; xFinal < 8; xFinal++) {
                         for (int yFinal = 0; yFinal < 8; yFinal++) {
-                            if (!this.MetRoiCourantEnDanger(xInit, yInit, xFinal, yFinal)) {
-                                return false;
+                            if (jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)) {
+                                if (!this.MetRoiCourantEnDanger(xInit, yInit, xFinal, yFinal)) {
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -313,22 +315,16 @@ public class Echiquier implements Cloneable {
     public boolean isALittleRoque(int xInit, int yInit, int xFinal, int yFinal) {
         if (!jeuCourant.isALittleRoque(xInit, yInit, xFinal, yFinal)) {
             return false;
-        } else if (collisionInPath(xInit, yInit, xFinal, yFinal)) {
-            return false;
-        } else {
-            return true;
         }
+        return !collisionInPath(xInit, yInit, xFinal, yFinal);
     }
 
     public boolean isABigRoque(int xInit, int yInit, int xFinal, int yFinal) {
 
         if (!jeuCourant.isABigRoque(xInit, yInit, xFinal, yFinal)) {
             return false;
-        } else if (collisionInPath(xInit, yInit, xFinal, yFinal)) {
-            return false;
-        } else {
-            return true;
         }
+        return !collisionInPath(xInit, yInit, xFinal, yFinal);
     }
 
     public boolean littleRoque(int xInit, int yInit, int xFinal, int yFinal) {

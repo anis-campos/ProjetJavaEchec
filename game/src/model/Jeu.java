@@ -176,7 +176,7 @@ public class Jeu implements Cloneable {
         
         return true;
     }
-
+    
     public static void main(String args[]) {
         Jeu jeuB = new Jeu(Couleur.BLANC);
         System.out.println(jeuB.findPiece(0, 7));

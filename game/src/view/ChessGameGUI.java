@@ -338,7 +338,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 			this.pieceToMove.setVisible(false);
 
 			// r�cup�ration du composant qui se trouve � position (pixel) finale
-			targetedComponent =  this.chessBoardGuiContainer.findComponentAt(e.getX(), e.getY());
+			targetedComponent =  this.chessBoardGuiContainer.findComponentAt(e.getX()-10, e.getY()-30);
 
 			// si c'est un carr� occup�, on a r�cup�r� une image de pi�ce
 			// et il faut r�cup�rer le square qui la contient

@@ -274,7 +274,10 @@ public class Echiquier implements Cloneable {
     }
 
     public boolean isPionToPromote(int x, int y) {
-        return ("Pion".equals(jeuCourant.getPieceType(x, y)) && jeuCourant.getCouleur() == Couleur.BLANC) ? y == 0 : y == 7;
+        if(!("Pion".equals(jeuCourant.getPieceType(x, y))))
+                return false;
+        else
+            return jeuCourant.getCouleur() == Couleur.BLANC ? y == 0 : y == 7;
     }
 
     public boolean promote(int x, int y, String newType) {

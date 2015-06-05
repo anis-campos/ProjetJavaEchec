@@ -69,7 +69,6 @@ public class Echiquier implements Cloneable {
 
     private boolean MetRoiEDanger(int xInit, int yInit, int xFinal, int yFinal, Coord roi) {
         Echiquier MondeParallele = (Echiquier) this.clone();
-
         MondeParallele.move(xInit, yInit, xFinal, yFinal);
         if (MondeParallele.roiEnDanger(roi)) {
             return true;
@@ -296,10 +295,9 @@ public class Echiquier implements Cloneable {
 
     private boolean testEchecEtMat(Coord roi) {
 
+        //Tester les deplacemnt du roi
         int X[] = {-1, 0, 1};
         int Y[] = {-1, 0, 1};
-        //Tester les deplacemnt du roi
-
         for (int x : X) {
             for (int y : Y) {
                 if (!this.roiEnDanger(new Coord(roi.x + x, roi.y + y))) {
@@ -308,22 +306,23 @@ public class Echiquier implements Cloneable {
             }
 
         }
-        
-        
-        Echiquier mondeParallele = (Echiquier) this.clone();
-        /*
-        
-        for(int x = 0; x<8; x++){
-            for (int y= 0; y<8; y++){
-                if (jeuCourant.isPieceHere(x, y)){
-                    this.MetRoiEDanger(x, y, x, y);
+
+        //Tester tous les autres pièces 
+        for (int xInit = 0; xInit < 8; xInit++) {
+            for (int yInit = 0; yInit < 8; yInit++) {
+                if (jeuCourant.isPieceHere(xInit, yInit)) {
+                    for (int xFinal = 0; xFinal < 8; xFinal++) {
+                        for (int yFinal = 0; yFinal < 8; yFinal++) {
+                            if (!this.MetRoiEDanger(xInit, yInit, xFinal, yFinal, roi))
+                                return false;
+                        }
+                    }
                 }
             }
-        }*/
+        }
         
-
-        //Tester les deplacement des autres pièces
-        return false;
+        //Tous les déplacement on été testés, le roi est foutu !!!!
+        return true;
     }
 
     public boolean isPionToPromote(int x, int y) {

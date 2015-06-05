@@ -38,10 +38,10 @@ public class Echiquier implements Cloneable {
 
     private Echiquier(Jeu jeux[], Jeu jeuCourant, String message, boolean echecEtMat) {
         this.jeux = jeux;
-        this. jeuCourant = jeuCourant;
+        this.jeuCourant = jeuCourant;
         this.message = message;
         this.echecEtMat = echecEtMat;
-                
+
     }
 
     public String getMessage() {
@@ -54,16 +54,16 @@ public class Echiquier implements Cloneable {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        
+
         Jeu jeuxClone[] = new Jeu[2];
-        for (int i = 0; i< jeuxClone.length; i++) {
-           jeuxClone[i] = (Jeu) this.jeux[i].clone();
+        for (int i = 0; i < jeuxClone.length; i++) {
+            jeuxClone[i] = (Jeu) this.jeux[i].clone();
         }
-        
-        Jeu jeuCourantClone = jeuCourant.getCouleur()==Couleur.BLANC?jeuxClone[Couleur.BLANC.ordinal()]:jeuxClone[Couleur.NOIR.ordinal()];
-        
+
+        Jeu jeuCourantClone = jeuCourant.getCouleur() == Couleur.BLANC ? jeuxClone[Couleur.BLANC.ordinal()] : jeuxClone[Couleur.NOIR.ordinal()];
+
         Echiquier clone = new Echiquier(jeuxClone, jeuCourantClone, message, echecEtMat);
-        
+
         return clone;
     }
 
@@ -92,7 +92,7 @@ public class Echiquier implements Cloneable {
                 return false;
             } else if (jeuCourant.getPieceType(xInit, yInit).equals("Roi")) {
                 if (JeuCourantIsEchec) {
-                    if (isPieceHereAllGames(xInit, yInit)) {
+                    if (isPieceHereAllGames(xFinal, yFinal)) {
                         if (captureManager(xInit, yInit, xFinal, yFinal)) //Il capture une pièce et n'est plus en danger
                         {
                             JeuCourantIsEchec = false;
@@ -102,23 +102,30 @@ public class Echiquier implements Cloneable {
                         JeuCourantIsEchec = false;
                     }
                 }
-            } else if (roiEnDanger(xFinal, yFinal)) {
+            } /*else if (roiEnDanger(xFinal, yFinal)) {
                 if (isPieceHereAllGames(xInit, yInit)) {
                     if (captureManager(xInit, yInit, xFinal, yFinal)) {
                         //CLONNNEEERRERER.
                     }
                 }
             }
-
+            */
+            
             //Gestion déplacement des autre pièces
             //Deplacement et Capture
-            if (isPieceHereAllGames(xInit, yInit) && captureManager(xInit, yInit, xFinal, yFinal)) {
+            if (isPieceHereAllGames(xFinal, yFinal) && captureManager(xInit, yInit, xFinal, yFinal)) {
+
                 getAdversaire().capture(xFinal, yFinal);
                 String nomPieceCapture = getAdversaire().getPieceName(xFinal, yFinal);
                 message = "[" + this.jeuCourant.toString() + "] Deplacement avec  Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : " + nomPieceCapture;
 
+            } else if (!isPieceHereAllGames(xFinal, yFinal) 
+                    &&"Pion".equals(jeuCourant.getPieceType(xInit, yInit)) 
+                    && (Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
+                message = "deplacement interdit";
+                return false;
             } else {
-                message = "Deplacment simple";
+                message = "Deplacement simple";
             }
 
             //Deplacement simple;

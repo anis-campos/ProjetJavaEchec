@@ -67,101 +67,80 @@ public class Echiquier implements Cloneable {
         return clone;
     }
 
-    private boolean MetRoiEDanger(int xInit, int yInit, int xFinal, int yFinal, Coord roi) {
+    private boolean MetRoiCourantEnDanger(int xInit, int yInit, int xFinal, int yFinal) {
+
         Echiquier MondeParallele = (Echiquier) this.clone();
-        MondeParallele.move(xInit, yInit, xFinal, yFinal);
-        if (MondeParallele.roiEnDanger(roi)) {
-            return true;
-        } else {
-            return false;
+        Coord roi = MondeParallele.jeuCourant.getKingCoord();
+        return MondeParallele.move_clone(xInit, yInit, xFinal, yFinal) && MondeParallele.roiEnDanger(roi);
+    }
+
+    private boolean move_clone(int xInit, int yInit, int xFinal, int yFinal) {
+
+        boolean rep = false;
+        if (Coord.coordonnees_valides(xFinal, yFinal)
+                && !(xInit == xFinal && yInit == yFinal)
+                && jeuCourant.isPieceHere(xInit, yInit)
+                && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
+                && !collisionInPath(xInit, yInit, xFinal, yFinal)
+                && !jeuCourant.isPieceHere(xFinal, yFinal)) {
+
+            if (!getAdversaire().isPieceHere(xFinal, yFinal)) {
+
+                if (jeuCourant.getPieceType(xInit, yInit).equals("Pion") && (Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
+                    return false;
+                }
+
+                rep = jeuCourant.move(xInit, yInit, xFinal, yFinal);
+
+            } else {
+                if (jeuCourant.getPieceType(xInit, yInit).equals("Pion") && !(Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
+                    return false;
+                }
+                getAdversaire().capture(xFinal, yFinal);
+                rep = jeuCourant.move(xInit, yInit, xFinal, yFinal);
+            }
+
         }
+        return rep;
     }
 
     public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
         boolean rep = false;
 
-        Coord RoiCourant = jeuCourant.getKingCoord();
-        Coord RoiAdversaire = getAdversaire().getKingCoord();
-
-        boolean JeuCourantIsEchec = roiEnDanger(RoiCourant);
-
-        if (roiEnDanger(RoiCourant)) {
-            testEchecEtMat(RoiCourant);
+        if(roiEnDanger(jeuCourant.getKingCoord())&&testEchecEtMat()){
+            echecEtMat = true;
+            message = "Jeu Terminé";
+            return false;
         }
-
+        
         if (Coord.coordonnees_valides(xFinal, yFinal)
                 && !(xInit == xFinal && yInit == yFinal)
                 && jeuCourant.isPieceHere(xInit, yInit)
                 && jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
-                && !collisionInPath(xInit, yInit, xFinal, yFinal)) {
+                && !collisionInPath(xInit, yInit, xFinal, yFinal)
+                && !jeuCourant.isPieceHere(xFinal, yFinal)) {
 
-            //Gestiion déplacement du roi.
-            if (jeuCourant.getPieceType(xInit, yInit).equals("Roi") && roiEnDanger(new Coord(xFinal, yFinal))) {
-                //gestion d'un déplacement interdit du roi
+            if (MetRoiCourantEnDanger(xInit, yInit, xFinal, yFinal)) {
+                message = "Ce mouvement met votre roi en danger !!!";
                 return false;
-            } else if (jeuCourant.getPieceType(xInit, yInit).equals("Roi")) {
-                if (JeuCourantIsEchec) {
-                    if (isPieceHereAllGames(xFinal, yFinal)) {
-                        if (ifPionCapture(xInit, yInit, xFinal, yFinal)) //Il capture une pièce et n'est plus en danger
-                        {
-                            JeuCourantIsEchec = false;
-                        } else {
-                            message = "Vous Etes en échec et le roi ne peut manger cette pièce";
-                        }
-                    } else {
-                        //il se sauve en se déplacant
-                        JeuCourantIsEchec = false;
-                    }
-                }
             }
 
-            if (JeuCourantIsEchec) {
-                if (MetRoiEDanger(xInit, yInit, xFinal, yFinal, RoiCourant)) {
-                    message = "Coups inutilse, roi toujour en danger !!!";
+            if (!getAdversaire().isPieceHere(xFinal, yFinal)) {
+
+                if (jeuCourant.getPieceType(xInit, yInit).equals("Pion") && (Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
+                    message = "Le pion se deplace en avant !";
                     return false;
-                } //Piece protège le roi
-                else {
-                    JeuCourantIsEchec = false;
                 }
 
-            }
+                rep = jeuCourant.move(xInit, yInit, xFinal, yFinal);
 
-            if (JeuCourantIsEchec) {
-                if (testEchecEtMat(RoiCourant)) {
-                    message = "votre roi est en échec et mat";
-                    return false;
-                } else {
-                    message = "votre roi est en échec";
-                    return false;
-                }
             } else {
-                //testEchecEtMat(RoiCourant);
-                //PAT A GERER
-            }
-
-            //Gestion déplacement des autre pièces
-            //Deplacement et Capture
-            if (isPieceHereAllGames(xFinal, yFinal) && ifPionCapture(xInit, yInit, xFinal, yFinal)) {
-
+                if (jeuCourant.getPieceType(xInit, yInit).equals("Pion") && !(Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
+                    message = "Le pion ne mange qu'en diagonale avant !";
+                    return false;
+                }
                 getAdversaire().capture(xFinal, yFinal);
-                String nomPieceCapture = getAdversaire().getPieceName(xFinal, yFinal);
-                message = "[" + this.jeuCourant.toString() + "] Deplacement avec  Capture de (" + xInit + "," + yInit + " vers " + xFinal + "," + yFinal + ") : " + nomPieceCapture;
-
-            } else if (!isPieceHereAllGames(xFinal, yFinal)
-                    && "Pion".equals(jeuCourant.getPieceType(xInit, yInit))
-                    && (Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
-                message = "deplacement interdit";
-                return false;
-            } else {
-                message = "Deplacement simple";
-            }
-
-            //Deplacement simple;
-            if (rep = jeuCourant.move(xInit, yInit, xFinal, yFinal)) {
-                this.message += "\n -> déplacement terminé";
-                testEchecEtMat(RoiAdversaire);
-            } else {
-                this.message += "\n -> il y a eu un problème dans le déplacement";
+                rep = jeuCourant.move(xInit, yInit, xFinal, yFinal);
             }
 
         } else {
@@ -242,15 +221,6 @@ public class Echiquier implements Cloneable {
         return rep;
     }
 
-    private boolean ifPionCapture(int xInit, int yInit, int xFinal, int yFinal) {
-
-        if ("Pion".equals(jeuCourant.getPieceType(xInit, yInit)) && !(Math.abs(xFinal - xInit) == Math.abs(yInit - yFinal))) {
-            message = "deplacement interdit";
-            return false;
-        }
-        return true;
-    }
-
     private boolean collisionInPath(int xInit, int yInit, int xFinal, int yFinal) {
 
         int x = xInit;
@@ -282,7 +252,9 @@ public class Echiquier implements Cloneable {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 if (getAdversaire().isPieceHere(x, y)) {
-                    if (getAdversaire().isMoveOk(x, y, roi.x, roi.y) && !collisionInPath(x, y, roi.x, roi.y) && ifPionCapture(x, y, roi.x, roi.y)) {
+                    if (getAdversaire().isMoveOk(x, y, roi.x, roi.y) && !collisionInPath(x, y, roi.x, roi.y)
+                            && (!jeuCourant.getPieceType(x, y).equals("Pion")
+                            || jeuCourant.getPieceType(x, y).equals("Pion") && (Math.abs(x - roi.x) == Math.abs(y - roi.y)))) {
                         message = "La pièce " + getAdversaire().getPieceName(x, y) + " " + new Coord(x, y) + " menace le roi";
                         return true;
                     }
@@ -292,14 +264,15 @@ public class Echiquier implements Cloneable {
         return false;
     }
 
-    private boolean testEchecEtMat(Coord roi) {
+    private boolean testEchecEtMat() {
 
-       /* //Tester les deplacemnt du roi
+        Coord roi = jeuCourant.getKingCoord();
+        //Tester les deplacemnt du roi
         int X[] = {-1, 0, 1};
         int Y[] = {-1, 0, 1};
         for (int x : X) {
             for (int y : Y) {
-                if (!this.roiEnDanger(new Coord(roi.x + x, roi.y + y))) {
+                if (jeuCourant.isMoveOk(roi.x, roi.y, x, y)&&!this.roiEnDanger(new Coord(roi.x + x, roi.y + y))) {
                     return false;
                 }
             }
@@ -312,18 +285,17 @@ public class Echiquier implements Cloneable {
                 if (jeuCourant.isPieceHere(xInit, yInit)) {
                     for (int xFinal = 0; xFinal < 8; xFinal++) {
                         for (int yFinal = 0; yFinal < 8; yFinal++) {
-                            if (!this.MetRoiEDanger(xInit, yInit, xFinal, yFinal, roi))
+                            if (!this.MetRoiCourantEnDanger(xInit, yInit, xFinal, yFinal)) {
                                 return false;
+                            }
                         }
                     }
                 }
             }
         }
-        
+
         //Tous les déplacement on été testés, le roi est foutu !!!!
-        return true;*/
-        
-        return false;
+        return true;
     }
 
     public boolean isPionToPromote(int x, int y) {
@@ -337,42 +309,46 @@ public class Echiquier implements Cloneable {
     public boolean promote(int x, int y, String newType) {
         return this.jeuCourant.promote(x, y, newType);
     }
-    
-    public boolean isALittleRoque(int xInit, int yInit, int xFinal, int yFinal){
-        if(!jeuCourant.isALittleRoque(xInit, yInit, xFinal, yFinal))
+
+    public boolean isALittleRoque(int xInit, int yInit, int xFinal, int yFinal) {
+        if (!jeuCourant.isALittleRoque(xInit, yInit, xFinal, yFinal)) {
             return false;
-        else if(collisionInPath(xInit, yInit, xFinal, yFinal))
+        } else if (collisionInPath(xInit, yInit, xFinal, yFinal)) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
-    
-    public boolean isABigRoque(int xInit, int yInit, int xFinal, int yFinal){
-        
-        if(!jeuCourant.isABigRoque(xInit, yInit, xFinal, yFinal))
+
+    public boolean isABigRoque(int xInit, int yInit, int xFinal, int yFinal) {
+
+        if (!jeuCourant.isABigRoque(xInit, yInit, xFinal, yFinal)) {
             return false;
-        else if(collisionInPath(xInit, yInit, xFinal, yFinal))
+        } else if (collisionInPath(xInit, yInit, xFinal, yFinal)) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
-    
-    public boolean littleRoque(int xInit, int yInit, int xFinal, int yFinal){
+
+    public boolean littleRoque(int xInit, int yInit, int xFinal, int yFinal) {
         boolean ret = this.jeuCourant.littleRoque(xInit, yInit, xFinal, yFinal);
-        if(ret)
+        if (ret) {
             message = "Petit roque !";
-        else
+        } else {
             message = "Erreur dans le petit roque.";
+        }
         return ret;
     }
-    
-    public boolean bigRoque(int xInit, int yInit, int xFinal, int yFinal){
+
+    public boolean bigRoque(int xInit, int yInit, int xFinal, int yFinal) {
         boolean ret = this.jeuCourant.bigRoque(xInit, yInit, xFinal, yFinal);
-        if(ret)
+        if (ret) {
             message = "Grand roque !";
-        else
+        } else {
             message = "Erreur dans le grand roque.";
-        return ret;        
+        }
+        return ret;
     }
 
 }

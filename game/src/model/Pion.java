@@ -22,6 +22,8 @@ public class Pion extends AbstractPiece implements Pions {
 
     @Override
     public boolean isMoveOk(int xFinal, int yFinal) {
+        if(!(xFinal == this.getX()))
+            return false;
         if (depart) {
             switch (this.couleur) {
                 case BLANC:

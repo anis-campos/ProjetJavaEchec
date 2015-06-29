@@ -1,33 +1,36 @@
 package socket.server;
 
-import java.io.BufferedReader;
+import controller.controllerLocal.ChessGameControler;
 import java.io.IOException;
-
+import java.io.ObjectInputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Couleur;
 
 public class Reception implements Runnable {
 
-	private BufferedReader in;
-	private String message = null, login = null;
+    private static Couleur JoueurEnCours = Couleur.BLANC;
+    private final ObjectInputStream in;
+    private final ChessGameControler controller;
 
-	public Reception(BufferedReader in, String login){
+    Reception(ObjectInputStream in, ChessGameControler controller) {
+        this.in = in;
+        this.controller = controller;
+    }
 
-		this.in = in;
-		this.login = login;
-	}
+    @Override
+    public void run() {
 
-	public void run() {
+        while (true) {
 
-		while(true){
-			try {
+            try {
+                Object readObject = in.readObject();
+                System.out.println("Nouveau message recu : " + readObject.toString());
 
-				message = in.readLine();
-				System.out.println("\n"+login+" : "+message);
-
-			} catch (IOException e) {
-
-				e.printStackTrace();
-			}
-		}
-	}
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(Reception.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
 }

@@ -1,36 +1,38 @@
-package socket.server;
+package  socket.server;
+
+
+import controller.controllerLocal.ChessGameControler;
 import java.io.*;
 import java.net.*;
 
+public class Accepter_connexion implements Runnable {
 
-public class Accepter_connexion implements Runnable{
+    private final ServerSocket socketserver = null;
+    private Socket lastSocket = null;
 
-	private ServerSocket socketserver = null;
-	private Socket socket = null;
+    public Thread receiver;
+    private final ChessGameControler controller;
 
-	public Thread t1;
-	public Accepter_connexion(ServerSocket ss){
-		socketserver = ss;
-	}
+    public Accepter_connexion(ServerSocket serverSocket, ChessGameControler controller) {
+        this.controller = controller;
+    }
 
-	public void run() {
+    @Override
+    public void run() {
 
-		try {
-			while(true){
+        try {
+            while (true) {
 
-				socket = socketserver.accept();
-				System.out.println("Un zéro veut se connecter  ");
+                lastSocket = socketserver.accept();
+                System.out.println("Un Client se connecte ");
+                receiver = new Thread(new ChessGameServeur(lastSocket, controller));
+                receiver.start();
 
+            }
+        } catch (IOException e) {
 
-				String login = null;
-				t1 = new Thread(new Chat_ClientServeur(socket, login ));
-				t1.start();
+            System.err.println("Erreur serveur");
+        }
 
-			}
-		} catch (IOException e) {
-
-			System.err.println("Erreur serveur");
-		}
-
-	}
+    }
 }

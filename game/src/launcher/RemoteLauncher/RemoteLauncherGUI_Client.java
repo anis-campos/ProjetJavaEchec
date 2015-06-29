@@ -1,13 +1,12 @@
 package launcher.RemoteLauncher;
 
-import launcher.localLauncher.*;
 import java.awt.Dimension;
 import java.util.Observer;
 
 import javax.swing.JFrame;
 
 import controller.ChessGameControlers;
-import controller.controllerLocal.ChessGameControler;
+import controller.controllerRemote.ChessGameControler;
 import model.observable.ChessGame;
 import view.ChessGameGUI;
 

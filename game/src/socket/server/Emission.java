@@ -1,28 +1,47 @@
 package socket.server;
-import java.io.PrintWriter;
-import java.util.Scanner;
 
+import controller.controllerLocal.ChessGameControler;
+import java.io.*;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Emission implements Runnable {
+public class Emission implements Runnable, Observer {
 
-	private PrintWriter out;
-	private String message = null;
-	private Scanner sc = null;
+    private final ObjectOutputStream out;
 
-	public Emission(PrintWriter out) {
-		this.out = out;
-	}
+    private final BlockingQueue<String> queue;
 
+    Emission(ObjectOutputStream out, ChessGameControler controller) {
+        this.out = out;
+        this.queue = new ArrayBlockingQueue<>(10);
+        controller.addObserver((Observer)this);
+    }
 
-	public void run() {
+    @Override
+    public void run() {
 
-		sc = new Scanner(System.in);
+        while (true) {
+            try {
+                String message = queue.take();
+                System.out.println(message);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Emission.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
-		while(true){
-			System.out.print("Votre message : ");
-			message = sc.nextLine();
-			out.println(message);
-			out.flush();
-		}
-	}
+    @Override
+    public void update(Observable o, Object arg) {
+        try {
+            queue.put("Nouveau Message");
+            out.writeObject(arg);
+            
+        } catch (InterruptedException | IOException ex) {
+            Logger.getLogger(Emission.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

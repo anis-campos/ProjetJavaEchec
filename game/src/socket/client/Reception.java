@@ -1,35 +1,31 @@
-package socket.client;
-
+package  socket.client;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class Reception implements Runnable {
 
-    private final ObjectInputStream socketIn;
-    private final OutputStream localOut;
+	private BufferedReader in;
+	private String message = null;
 
-    public Reception(ObjectInputStream socketIn, OutputStream localOut) {
-        this.socketIn = socketIn;
-        this.localOut = localOut;
-    }
+	public Reception(BufferedReader in){
 
-    @Override
-    public void run() {
+		this.in = in;
+	}
 
-        while (true) {
-            try {
+	public void run() {
 
-                ObjectOutputStream out = new ObjectOutputStream(localOut);
-                out.writeObject(socketIn.readObject());
+		while(true){
+			try {
 
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(Reception.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
+				message = in.readLine();
+				System.out.println("Le serveur vous dit :" +message);
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+		}
+	}
 
 }

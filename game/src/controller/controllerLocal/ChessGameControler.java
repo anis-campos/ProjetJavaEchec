@@ -3,6 +3,7 @@ package controller.controllerLocal;
 import model.Coord;
 import model.observable.ChessGame;
 import controller.AbstractChessGameControler;
+import java.util.Observer;
 
 /**
  * @author francoise.perrin
@@ -25,6 +26,10 @@ public class ChessGameControler extends AbstractChessGameControler {
     @Override
     public boolean promote(Coord coord, String newType) {
         return chessGame.promote(coord.x, coord.y, newType);
+    }
+
+    public void addObserver(Observer observer) {
+       this.chessGame.addObserver(observer);
     }
 
 }

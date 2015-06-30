@@ -53,7 +53,7 @@ public class Coord implements Serializable, Comparable, Cloneable {
     }
 
     @Override
-    protected Coord clone() {
+    public Coord clone() {
         return new Coord(x, y);
     }
 

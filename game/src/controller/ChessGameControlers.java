@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.Observer;
 import model.Coord;
 import model.Couleur;
 
@@ -15,4 +16,7 @@ public interface ChessGameControlers {
 	
 	public Couleur getColorCurrentPlayer();
 
+    public void addObserver(Observer observer);
+
+ 
 }

@@ -13,6 +13,7 @@ public class RoqueNotification extends MoveNotification {
 
     public int xTourInit, xTourFinal, yTourInit, yTourFinal;
 
+    public TypeRoque type;
 
     public RoqueNotification(int xInit, int yInit, int xFinal, int yFinal, boolean isMoveOk, TypeRoque typeRoque) {
         super(xInit, yInit, xFinal, yFinal, isMoveOk, false);
@@ -21,7 +22,7 @@ public class RoqueNotification extends MoveNotification {
         this.yTourFinal = yFinal;
         
         
-        switch (typeRoque) {
+        switch (type=typeRoque) {
             case BIG:
                 this.xTourInit = 0;
                 this.xTourFinal = 3;
@@ -45,7 +46,8 @@ public class RoqueNotification extends MoveNotification {
 
     @Override
     public String toString() {
-        return "Big Roque : Roi ("+xInit+","+yInit+")->("+xFinal+","+yFinal+") et Tour ("+xTourInit+","+yTourInit+")->("+xTourFinal+","+yTourFinal+")";
+        String tmp = type == TypeRoque.BIG ? "Grand Roque :":"Petit Roque :";
+        return tmp+" Roi ("+xInit+","+yInit+")->("+xFinal+","+yFinal+") et Tour ("+xTourInit+","+yTourInit+")->("+xTourFinal+","+yTourFinal+")";
     }
 
     

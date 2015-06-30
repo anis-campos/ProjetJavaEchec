@@ -1,34 +1,48 @@
-package  socket.client;
-import java.io.*;
-import java.net.*;
+package socket.client;
 
-public class Client {
+import controller.ChessGameControlers;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.UUID;
+import socket.Common.Emission;
+import socket.Common.Reception;
 
-	public static Socket socket = null;
-	public static Thread t1;
+public class Client implements Runnable {
 
-	public static void main(String[] args) {
+    private final Socket socket;
+    private final ChessGameControlers chessGameControler;
+ 
+    private Thread t4;
+    private Thread t3;
+    
+    private static final UUID ID = java.util.UUID.randomUUID();
 
+    public Client(Socket socket, ChessGameControlers chessGameControler) {
+        this.socket = socket;
+        this.chessGameControler = chessGameControler;
+    }
 
-		try {
+    @Override
+    public void run() {
 
-			System.out.println("Demande de connexion");
-			socket = new Socket("127.0.0.1",2009);
-			System.out.println("Connexion tablie avec le serveur, authentification :"); // Si le message s'affiche c'est que je suis connect
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-			t1 = new Thread(new Connexion(socket));
-			t1.start();
+            out.writeObject(ID);
+            out.flush();
+                                    
+            t4 = new Thread(new Emission(out,chessGameControler));
+            t4.start();
+            t3 = new Thread(new Reception(in,chessGameControler));
+            t3.start();
 
+        } catch (IOException e) {
+            System.err.println("Le serveur distant s'est dconnect !");
+        }
 
-
-		} catch (UnknownHostException e) {
-			System.err.println("Impossible de se connecter  l'adresse "+socket.getLocalAddress());
-		} catch (IOException e) {
-			System.err.println("Aucun serveur  l'coute du port "+socket.getLocalPort());
-		}
-
-
-
-	}
+    }
 
 }

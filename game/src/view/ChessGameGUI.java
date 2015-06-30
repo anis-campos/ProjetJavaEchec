@@ -368,8 +368,6 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         // plus 1 bool�en qui indique si le d�placement a �t� effectif
         Notification notif = (Notification) arg1;
 
-        JPanel TourToRoqueSquare;
-        JLabel TourToRoque;
         // carr� de destination
         JPanel targetSquare;
         // carre initial
@@ -382,18 +380,15 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
         targetSquare = this.tab2DJPanel[notif.xFinal][notif.yFinal];
 
-        if (notif instanceof EchecEtMatNotification){
-            
-        }
-        else if (notif instanceof IllegalMoveNotification) {
-            
-        }
-        else if (notif instanceof PromotedNotification) {
+        if (notif instanceof EchecEtMatNotification) {
+
+        } else if (notif instanceof IllegalMoveNotification) {
+
+        } else if (notif instanceof PromotedNotification) {
             PromotedNotification promotedN = (PromotedNotification) notif;
-            JLabel newImage = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(promotedN.newType, promotedN.couleur)));
+            JLabel newImage = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(promotedN.newType, chessGameControler.getColorCurrentPlayer())));
             pieceToMove = newImage;
-        }
-        else if (notif instanceof MoveNotification) {
+        } else if (notif instanceof MoveNotification) {
 
             MoveNotification moveN = (MoveNotification) notif;
             // s'il existe une pi�ce � prendre
@@ -411,8 +406,8 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 if (notif instanceof RoqueNotification) {
                     RoqueNotification roqueN = (RoqueNotification) notif;
                     System.out.println(notif);
-                    TourToRoqueSquare = this.tab2DJPanel[roqueN.xTourInit][roqueN.yTourInit];
-                    TourToRoque = (JLabel) TourToRoqueSquare.getComponent(0);
+                    JPanel TourToRoqueSquare = this.tab2DJPanel[roqueN.xTourInit][roqueN.yTourInit];
+                    JLabel TourToRoque = (JLabel) TourToRoqueSquare.getComponent(0);
                     TourToRoque.setVisible(false);
                     targetRoqueSquare = this.tab2DJPanel[roqueN.xTourFinal][roqueN.yTourFinal];
                     targetRoqueSquare.add(TourToRoque);

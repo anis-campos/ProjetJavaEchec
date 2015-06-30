@@ -19,22 +19,18 @@ public class Echiquier implements Cloneable {
     private boolean echecEtMat;
 
     public Echiquier() {
-        jeux = new Jeu[2];
+        this(Couleur.BLANC);
+       
+    }
+    
+      public Echiquier( Couleur PremierJoueur) {
+          jeux = new Jeu[2];
         for (Couleur coul : Couleur.values()) {
             jeux[coul.ordinal()] = new Jeu(coul);
         }
         echecEtMat = false;
-        jeuCourant = jeux[Couleur.BLANC.ordinal()];
-        /*
-         switch (jeuCourant.getCouleur()) {
-         case BLANC:
-         message = "L'équipe blanche a gagné le tirage au sort !";
-         break;
-         case NOIR:
-         message = "L'équipe noire a gagné le tirage au sort !";
-         break;
-         }*/
-    }
+        jeuCourant = jeux[PremierJoueur.ordinal()];
+      }
 
     private Echiquier(Jeu jeux[], Jeu jeuCourant, String message, boolean echecEtMat) {
         this.jeux = jeux;

@@ -93,7 +93,7 @@ public class ChessGame extends Observable {
         }
         this.setChanged();
 
-        this.notifyObservers(new PromotedNotification(x, y, newType, couleur));
+        this.notifyObservers(new PromotedNotification(x, y, newType));
         return isPromoteOk;
     }
 

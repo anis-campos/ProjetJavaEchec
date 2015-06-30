@@ -1,20 +1,29 @@
 package  socket.server;
 
 
-import controller.controllerLocal.ChessGameControler;
+import controller.ChessGameControlers;
 import java.io.*;
 import java.net.*;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Accepter_connexion implements Runnable {
 
-    private final ServerSocket socketserver = null;
-    private Socket lastSocket = null;
+    private final ServerSocket socketserver;
+    private Socket lastClientSocket;
 
     public Thread receiver;
-    private final ChessGameControler controller;
+    private final ChessGameControlers controller;
 
-    public Accepter_connexion(ServerSocket serverSocket, ChessGameControler controller) {
+    private final Map<UUID, Socket> map;
+    
+    public Accepter_connexion(ServerSocket serverSocket, ChessGameControlers controller) {
         this.controller = controller;
+        this.socketserver = serverSocket;
+        this.map = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -23,9 +32,10 @@ public class Accepter_connexion implements Runnable {
         try {
             while (true) {
 
-                lastSocket = socketserver.accept();
-                System.out.println("Un Client se connecte ");
-                receiver = new Thread(new ChessGameServeur(lastSocket, controller));
+                lastClientSocket = socketserver.accept();
+                System.out.println("Un Client se connecte avec l'adresse : " + lastClientSocket.getInetAddress().getHostAddress());
+
+                receiver = new Thread(new ChessGameServeur(lastClientSocket, controller,map));
                 receiver.start();
 
             }

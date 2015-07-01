@@ -1,6 +1,7 @@
 package model.observable;
 
 import java.util.Observable;
+import model.Coord;
 import model.Couleur;
 
 import model.Echiquier;
@@ -57,20 +58,19 @@ public class ChessGame extends Observable {
             notif = new EchecEtMatNotification();
         } else if (this.echiquier.isABigRoque(xInit, yInit, xFinal, yFinal)) {
             isMoveOk = this.echiquier.bigRoque(xInit, yInit, xFinal, yFinal);
-            notif = new RoqueNotification(xInit, yInit, xFinal, yFinal, isMoveOk, RoqueNotification.TypeRoque.BIG);
+            notif = new RoqueNotification(xInit, yInit, xFinal, yFinal, RoqueNotification.TypeRoque.BIG);
 
         } else if (this.echiquier.isALittleRoque(xInit, yInit, xFinal, yFinal)) {
             isMoveOk = this.echiquier.littleRoque(xInit, yInit, xFinal, yFinal);
-            notif = new RoqueNotification(xInit, yInit, xFinal, yFinal, isMoveOk, RoqueNotification.TypeRoque.LITTLE);
+            notif = new RoqueNotification(xInit, yInit, xFinal, yFinal, RoqueNotification.TypeRoque.LITTLE);
         } else {
             if (isMoveOk = echiquier.move(xInit, yInit, xFinal, yFinal)) {
-                if(pionPromoted = echiquier.isPionToPromote(xFinal, yFinal)){
-                     pionPromoted = echiquier.isPionToPromote(xFinal, yFinal);
-                }else
-                {
-                     echiquier.switchJoueur();
+                if (pionPromoted = echiquier.isPionToPromote(xFinal, yFinal)) {
+                    pionPromoted = echiquier.isPionToPromote(xFinal, yFinal);
+                } else {
+                    echiquier.switchJoueur();
                 }
-                notif = new MoveNotification(xInit, yInit, xFinal, yFinal, isMoveOk, pionPromoted);
+                notif = new MoveNotification(xInit, yInit, xFinal, yFinal, pionPromoted);
             } else {
                 notif = new IllegalMoveNotification();
             }
@@ -109,4 +109,15 @@ public class ChessGame extends Observable {
         return echiquier.getColorCurrentPlayer();
     }
 
+    public void notifyIllegal() {
+        this.setChanged();
+        this.notifyObservers(new IllegalMoveNotification());
+    }
+
+    public Couleur getColorPiece(Coord initCoord) {
+
+       return  this.echiquier.getColorPiece(initCoord);
+
+        
+    }
 }

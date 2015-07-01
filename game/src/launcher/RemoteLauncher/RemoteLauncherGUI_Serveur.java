@@ -1,6 +1,8 @@
 package launcher.RemoteLauncher;
 
 import controller.ChessGameControlers;
+import controller.controllerRemote.ChessGameControler;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -30,18 +32,22 @@ public class RemoteLauncherGUI_Serveur {
         dim = new Dimension(800, 800);
 
         chessGame = new ChessGame();
-        chessGameControler = new controller.controllerRemote.ChessGameControler(chessGame);
+        chessGameControler = new controller.controllerRemote.ChessGameControler(chessGame,ChessGameControler.Type.SERVER);
 
         if (!Connexion(chessGameControler)) {
             return;
         }
 
+        
         frame = new ChessGameGUI("Jeu d'échec", chessGameControler, dim);
         chessGame.addObserver((Observer) frame);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocation(600, 10);
         frame.setPreferredSize(dim);
+        
+        frame.setTitle("LE SERVEUR");
+        
         frame.pack();
         frame.setVisible(true);
 

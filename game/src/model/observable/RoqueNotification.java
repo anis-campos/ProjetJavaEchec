@@ -15,8 +15,8 @@ public class RoqueNotification extends MoveNotification {
 
     public TypeRoque type;
 
-    public RoqueNotification(int xInit, int yInit, int xFinal, int yFinal, boolean isMoveOk, TypeRoque typeRoque) {
-        super(xInit, yInit, xFinal, yFinal, isMoveOk, false);
+    public RoqueNotification(int xInit, int yInit, int xFinal, int yFinal, TypeRoque typeRoque) {
+        super(xInit, yInit, xFinal, yFinal, false);
 
         this.yTourInit = yInit;
         this.yTourFinal = yFinal;

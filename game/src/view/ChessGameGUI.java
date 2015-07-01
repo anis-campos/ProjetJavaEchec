@@ -91,6 +91,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
     private JPanel equipeCourantePanel;
     private JLabel equipeCourante;
+    private JLabel sauvPieceToMove;
 
     /**
      *
@@ -126,7 +127,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
         this.layeredPaneEchiquier = new JPanel();
         this.chessBoardGuiContainer = new JPanel();
-        this.mapSquareCoord = new HashMap<JPanel, Coord>();
+        this.mapSquareCoord = new HashMap<>();
         this.tab2DJPanel = new JPanel[8][8];
 
         this.layeredPaneGame = new JPanel();
@@ -269,7 +270,6 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     public void mousePressed(MouseEvent e) {
 
         Point pieceToMoveLocation = null;
-        JLabel sauvPieceToMove;
 
         Component c = this.chessBoardGuiContainer.findComponentAt(e.getX() - 10, e.getY() - 30);
 
@@ -280,6 +280,12 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
             this.pieceToMove = (JLabel) c;
             this.pieceToMoveSquare = (JPanel) c.getParent();
+
+            Coord initCoord = this.mapSquareCoord.get(this.pieceToMoveSquare);
+
+            if (!(chessGameControler.getColorCurrentPlayer() == chessGameControler.getColorPiece(initCoord))) {
+                return;
+            }
 
             // avant de d�placer la pi�ce, on en positionne un clone invisible
             // au m�me endroit : cela servira lors du rafraichissement de la fen�tre (update)
@@ -302,7 +308,12 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
      */
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (this.pieceToMove != null) {
+
+        if (this.pieceToMove != null && pieceToMoveSquare != null) {
+            Coord initCoord = this.mapSquareCoord.get(this.pieceToMoveSquare);
+            if (!(chessGameControler.getColorCurrentPlayer() == chessGameControler.getColorPiece(initCoord))) {
+                return;
+            }
             this.pieceToMove.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
         }
     }
@@ -317,7 +328,13 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         Component targetedComponent = null;
         JPanel targetSquare;
 
-        if (this.pieceToMove != null) {
+        if (this.pieceToMove != null && pieceToMoveSquare != null) {
+
+            initCoord = this.mapSquareCoord.get(this.pieceToMoveSquare);
+
+            if (!(chessGameControler.getColorCurrentPlayer() == chessGameControler.getColorPiece(initCoord))) {
+                return;
+            }
 
             this.pieceToMove.setVisible(false);
 
@@ -375,44 +392,42 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
         pieceToMoveSquare = this.tab2DJPanel[notif.xInit][notif.yInit];
         pieceToMove = (JLabel) pieceToMoveSquare.getComponent(0);
-
         pieceToMove.setVisible(false);
 
         targetSquare = this.tab2DJPanel[notif.xFinal][notif.yFinal];
 
-        if (notif instanceof EchecEtMatNotification) {
-
-        } else if (notif instanceof IllegalMoveNotification) {
-
+        if (notif instanceof EchecEtMatNotification || notif instanceof IllegalMoveNotification) {
+            sauvPieceToMove.setVisible(true);
         } else if (notif instanceof PromotedNotification) {
             PromotedNotification promotedN = (PromotedNotification) notif;
             JLabel newImage = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(promotedN.newType, chessGameControler.getColorCurrentPlayer())));
             pieceToMove = newImage;
+            pieceToMove.setVisible(true);
         } else if (notif instanceof MoveNotification) {
 
             MoveNotification moveN = (MoveNotification) notif;
             // s'il existe une pi�ce � prendre
-            if (moveN.isMoveOk) {
-                try {
-                    targetSquare.getComponent(0);
-                    //suppression de l'image de la piece sur laquelle on deplace la piece courante
-                    targetSquare.remove(0);
-                } catch (Exception e) {
-                } finally {
-                    // rendre effectif le d�placement de la pi�ce
-                    targetSquare.add(pieceToMove);
-                }
 
-                if (notif instanceof RoqueNotification) {
-                    RoqueNotification roqueN = (RoqueNotification) notif;
-                    System.out.println(notif);
-                    JPanel TourToRoqueSquare = this.tab2DJPanel[roqueN.xTourInit][roqueN.yTourInit];
-                    JLabel TourToRoque = (JLabel) TourToRoqueSquare.getComponent(0);
-                    TourToRoque.setVisible(false);
-                    targetRoqueSquare = this.tab2DJPanel[roqueN.xTourFinal][roqueN.yTourFinal];
-                    targetRoqueSquare.add(TourToRoque);
-                    TourToRoque.setVisible(true);
-                }
+            try {
+                targetSquare.getComponent(0);
+                //suppression de l'image de la piece sur laquelle on deplace la piece courante
+                targetSquare.remove(0);
+            } catch (Exception e) {
+            } finally {
+                // rendre effectif le d�placement de la pi�ce
+                targetSquare.add(pieceToMove);
+                pieceToMove.setVisible(true);
+            }
+
+            if (notif instanceof RoqueNotification) {
+                RoqueNotification roqueN = (RoqueNotification) notif;
+                System.out.println(notif);
+                JPanel TourToRoqueSquare = this.tab2DJPanel[roqueN.xTourInit][roqueN.yTourInit];
+                JLabel TourToRoque = (JLabel) TourToRoqueSquare.getComponent(0);
+                TourToRoque.setVisible(false);
+                targetRoqueSquare = this.tab2DJPanel[roqueN.xTourFinal][roqueN.yTourFinal];
+                targetRoqueSquare.add(TourToRoque);
+                TourToRoque.setVisible(true);
             }
 
             if (moveN.isPionToPromote) {
@@ -431,8 +446,6 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
             }
 
         }
-
-        pieceToMove.setVisible(true);
 
         this.messageTextBox.addMessage(this.chessGameControler.getMessage());
         this.messageBox.setText(this.messageTextBox.getMesageBox());

@@ -20,17 +20,17 @@ public class Echiquier implements Cloneable {
 
     public Echiquier() {
         this(Couleur.BLANC);
-       
+
     }
-    
-      public Echiquier( Couleur PremierJoueur) {
-          jeux = new Jeu[2];
+
+    public Echiquier(Couleur PremierJoueur) {
+        jeux = new Jeu[2];
         for (Couleur coul : Couleur.values()) {
             jeux[coul.ordinal()] = new Jeu(coul);
         }
         echecEtMat = false;
         jeuCourant = jeux[PremierJoueur.ordinal()];
-      }
+    }
 
     private Echiquier(Jeu jeux[], Jeu jeuCourant, String message, boolean echecEtMat) {
         this.jeux = jeux;
@@ -295,7 +295,7 @@ public class Echiquier implements Cloneable {
                             if (jeuCourant.isMoveOk(xInit, yInit, xFinal, yFinal)
                                     && !collisionInPath(xInit, yInit, xFinal, yFinal)) {
                                 if (!this.MetRoiCourantEnDanger(xInit, yInit, xFinal, yFinal)) {
-                                    System.out.println((xInit+1) + " " + (yInit+1) + " " + (xFinal+1) + " " + (yFinal+1));
+                                    System.out.println((xInit + 1) + " " + (yInit + 1) + " " + (xFinal + 1) + " " + (yFinal + 1));
                                     return false;
                                 }
                             }
@@ -354,6 +354,16 @@ public class Echiquier implements Cloneable {
             message = "Erreur dans le grand roque.";
         }
         return ret;
+    }
+
+    public Couleur getColorPiece(Coord initCoord) {
+
+        Couleur rep;
+
+        rep = this.jeux[Couleur.BLANC.ordinal()].isPieceHere(initCoord.x, initCoord.y) ? Couleur.BLANC : Couleur.NOIR;
+
+        return rep;
+
     }
 
 }

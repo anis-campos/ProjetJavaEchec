@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.UUID;
 import socket.Common.Emission;
 import socket.Common.Reception;
 
@@ -17,7 +16,7 @@ public class Client implements Runnable {
     private Thread t4;
     private Thread t3;
     
-    private static final UUID ID = java.util.UUID.randomUUID();
+
 
     public Client(Socket socket, ChessGameControlers chessGameControler) {
         this.socket = socket;
@@ -31,8 +30,7 @@ public class Client implements Runnable {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            out.writeObject(ID);
-            out.flush();
+
                                     
             t4 = new Thread(new Emission(out,chessGameControler));
             t4.start();

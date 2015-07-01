@@ -10,6 +10,7 @@ import controller.controllerRemote.ChessGameControler;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import javax.swing.JOptionPane;
 import static launcher.RemoteLauncher.RemoteLauncherGUI_Serveur.IP_SERVER;
 import model.observable.ChessGame;
 import view.ChessGameGUI;
@@ -63,6 +64,7 @@ public class RemoteLauncherGUI_Client {
     public static boolean Connexion(ChessGameControlers chessGameControler) {
 
         try {
+
 
             System.out.println("Demande de connexion");
             Socket socket = new Socket(IP_SERVER, PORT);

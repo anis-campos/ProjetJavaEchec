@@ -4,11 +4,6 @@ package  socket.server;
 import controller.ChessGameControlers;
 import java.io.*;
 import java.net.*;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Accepter_connexion implements Runnable {
 
@@ -18,12 +13,12 @@ public class Accepter_connexion implements Runnable {
     public Thread receiver;
     private final ChessGameControlers controller;
 
-    private final Map<UUID, Socket> map;
+
     
     public Accepter_connexion(ServerSocket serverSocket, ChessGameControlers controller) {
         this.controller = controller;
         this.socketserver = serverSocket;
-        this.map = new ConcurrentHashMap<>();
+
     }
 
     @Override
@@ -35,7 +30,7 @@ public class Accepter_connexion implements Runnable {
                 lastClientSocket = socketserver.accept();
                 System.out.println("Un Client se connecte avec l'adresse : " + lastClientSocket.getInetAddress().getHostAddress());
 
-                receiver = new Thread(new ChessGameServeur(lastClientSocket, controller,map));
+                receiver = new Thread(new ChessGameServeur(lastClientSocket, controller));
                 receiver.start();
 
             }

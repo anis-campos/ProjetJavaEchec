@@ -1,8 +1,7 @@
 package socket.Common;
 
-import controller.ChessGameControlers;
-import controller.MoveNotification;
-import controller.PromotedNotification;
+import controller.*;
+import controller.controllerRemote.ChessGameControler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.logging.Level;
@@ -10,12 +9,12 @@ import java.util.logging.Logger;
 
 public class Reception implements Runnable {
 
-    private final ChessGameControlers chessGameControler;
+    private final ChessGameControler chessGameControler;
     private final ObjectInputStream in;
 
     public Reception(ObjectInputStream in, ChessGameControlers chessGameControler) {
         this.in = in;
-        this.chessGameControler = chessGameControler;
+        this.chessGameControler = (ChessGameControler) chessGameControler;
     }
 
     @Override
@@ -29,7 +28,7 @@ public class Reception implements Runnable {
                 if (notif instanceof MoveNotification) {
                     MoveNotification mn = (MoveNotification) notif;
                     System.out.println("Nouvelles Action recu recu : Move de " + mn.Init + " à " + mn.Final);
-                    this.chessGameControler.move(mn.Init, mn.Final);
+                    this.chessGameControler.moveRemote(mn.Init, mn.Final);
                 } else if (notif instanceof PromotedNotification) {
                     PromotedNotification pn = (PromotedNotification) notif;
                      System.out.println("Nouvelles Action recu recu : Promote de " + pn.CoordPion + " en " + pn.newType);

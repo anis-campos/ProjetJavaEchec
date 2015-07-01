@@ -5,19 +5,16 @@
  */
 package model.observable;
 
-import model.Couleur;
-
 /**
  *
  * @author Anis.DASILVACAMPOS
  */
 public class MoveNotification extends Notification {
 
-    public boolean isMoveOk,isPionToPromote;
+    public boolean isPionToPromote;
 
-    MoveNotification(int xInit, int yInit, int xFinal, int yFinal, boolean isMoveOk, boolean isPionToPromote) {
+    MoveNotification(int xInit, int yInit, int xFinal, int yFinal, boolean isPionToPromote) {
         super(xInit, yInit, xFinal, yFinal);
-        this.isMoveOk = isMoveOk;
         this.isPionToPromote = isPionToPromote;
     }
 
